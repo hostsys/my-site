@@ -1,13 +1,15 @@
 import { createApp } from 'vue';
+// import { createRouterScroller } from 'vue-router-better-scroller';
+import { nextTick } from 'vue';
 import { createPinia } from 'pinia';
 
 import App from './App.vue';
 import router from './router';
 
-// import './assets/main.css'
 import './index.css';
 import './assets/main.css';
 
+import axios from 'axios';
 import * as THREE from 'three';
 import * as TWEEN from '@tweenjs/tween.js';
 
@@ -15,6 +17,12 @@ const app = createApp(App);
 
 app.use(createPinia());
 app.use(router);
+// app.use(createRouterScroller({
+//   selectors: {
+//     'body': true,
+//     '#content': true
+//   },
+// }))
 
 app.mount('#app');
 
@@ -31,24 +39,21 @@ const bgScene = new THREE.Scene();
 
 // shape
 
-// const geometry = new THREE.SphereGeometry(6, 8, 8);
-// const material = new THREE.MeshStandardMaterial({
-//   color: 'red',
-// });
-// const mesh = new THREE.Mesh(geometry, material);
-// bgScene.add(mesh);
 const bgGeometry = new THREE.BufferGeometry();
 const positions = [];
-for (let i = 0; i < 3000; i++) {
+
+for (let i = 0; i < 6000; i++) {
   const particle = new THREE.Vector3(
     Math.random() * 600 - 300,
+    Math.random() * 2000 - 1000,
     Math.random() * 600 - 300,
-    Math.random() * 600 - 300
   );
 
-  particle.velocity = 0;
-  particle.acceleration = 0.02;
+  // particle.velocity = 0;
+  // particle.acceleration = 0.02;
+
   positions.push(particle.x, particle.y, particle.z);
+
   // bgGeometry.vertices.push(particles);
   bgGeometry.setAttribute(
     'position',
@@ -56,39 +61,28 @@ for (let i = 0; i < 3000; i++) {
   );
 }
 
-// import './public/star-texture.png';
+bgScene.background = new THREE.Color(0x020202)
+
 const bgTexture = new THREE.TextureLoader().load('star-texture.png');
 const bgMaterial = new THREE.PointsMaterial({
   color: 'white',
-  size: 1,
+  size: 2,
   map: bgTexture,
+  transparent: true
 });
 const stars = new THREE.Points(bgGeometry, bgMaterial);
 bgScene.add(stars);
 
-// camera
-
-// const bgCamera = new THREE.PerspectiveCamera(
-//   45,
-//   sizes.width / sizes.height,
-//   0.1,
-//   100
-// );
 const bgCamera = new THREE.PerspectiveCamera(
   60,
   sizes.width / sizes.height,
-  1,
-  1000
+  0.01,
+  2000
 );
 bgCamera.position.z = 1;
 bgCamera.rotation.x = Math.PI / 2;
+
 bgScene.add(bgCamera);
-
-// light
-
-// const bgLight = new THREE.PointLight(0xffffff, 1, 15);
-// bgLight.position.set(0, 0, 10);
-// bgScene.add(bgLight);
 
 // renderererer
 const canvas = document.querySelector('#bg');
@@ -109,67 +103,93 @@ window.addEventListener('resize', () => {
 });
 
 // rotation q and e
-// press
-let rotateLeft = false;
-let rotateRight = false;
+
+let yRotation = 0;
 
 window.addEventListener('keydown', (downEvent) => {
   //case of q
-  if (downEvent.key === 'q' || downEvent.key === 'Q') {
-    rotateLeft = true;
+  if ( downEvent.key.toLowerCase() === 'a' ) {
+    tweenYRotation(-0.03);
   } //case of e
-  else if (downEvent.key === 'e' || downEvent.key === 'E') {
-    rotateRight = true;
+  else if ( downEvent.key.toLowerCase() === 'd' ) {
+    tweenYRotation(0.03);
   }
 });
 // release
 window.addEventListener('keyup', (upEvent) => {
   //case of q
-  if (upEvent.key === 'q' || upEvent.key === 'Q') {
-    rotateLeft = false;
-  } //case of e
-  else if (upEvent.key === 'e' || upEvent.key === 'E') {
-    rotateRight = false;
+  if ( upEvent.key.toLowerCase() === 'a' || upEvent.key.toLowerCase() === 'd' ) {
+    tweenYRotation(0);
+  } 
+});
+
+// speed w and s
+
+let ySpeed = 1;
+let speedChangeInProgress = false;
+
+document.addEventListener('keydown', (event) => {
+  if ( event.key.toLowerCase() === 's' && !speedChangeInProgress ) {
+    tweenYSpeed(0.3, 800, TWEEN.Easing.Sinusoidal.In);
+  } else if ( event.key.toLowerCase() === 'w' && !speedChangeInProgress ) {
+    tweenYSpeed(3, 800, TWEEN.Easing.Quartic.In);
   }
 });
+
+document.addEventListener('keyup', (event) => {
+  if ( event.key.toLowerCase() === 's' || event.key.toLowerCase() === 'w' ) {
+    tweenYSpeed(1, 800, TWEEN.Easing.Sinusoidal.InOut);
+  }
+});
+
+function tweenYSpeed(targetSpeed, duration, easing) {
+  speedChangeInProgress = true; // Mark speed change animation in progress
+
+  new TWEEN.Tween({ speed: ySpeed })
+    .to({ speed: targetSpeed }, duration) // Transition time in milliseconds
+    .easing(easing) // Use specified easing function
+    .onUpdate((obj) => {
+      ySpeed = obj.speed;
+    })
+    .onComplete(() => {
+      speedChangeInProgress = false; // Reset the flag after animation completion
+    })
+    .start();
+}
+
+function tweenYRotation(targetRSpeed) {
+  new TWEEN.Tween({ rSpeed: yRotation })
+    .to({ rSpeed: targetRSpeed }, 1200) // Transition time in milliseconds
+    .easing(TWEEN.Easing.Sinusoidal.InOut) // Use desired easing function
+    .onUpdate((obj) => {
+      yRotation = obj.rSpeed;
+    })
+    .start();
+}
+
 // rerenderer
 
-// let lookingRight = true;
-const bgAnimate = (t) => {
-  // TWEEN.update(t);
+function bgAnimate() {
+  TWEEN.update();
+  // console.log( ySpeed )
   const positions = bgGeometry.getAttribute('position').array;
 
   for (let i = 0; i < positions.length; i += 3) {
-    let x = positions[i];
+    // let x = positions[i];
     let y = positions[i + 1];
-    let z = positions[i + 2];
+    // let z = positions[i + 2];
 
-    y -= 0.5;
+    // y -= 1;
+    y -= ySpeed;
 
-    if (y < -200) {
-      y = 400;
+    if (y < -1000) {
+      y = 1000;
     }
-    positions[i + 1] = y; // Update the modified y-coordinate
+    
+    positions[i + 1] = y; // update the modified y-coordinate
   }
   // star rotation controls
-  if (rotateLeft == true) {
-    stars.rotation.y -= 0.01;
-  } else if (rotateRight == true) {
-    stars.rotation.y += 0.01;
-  } // else stars.rotation.y = 0;
-
-  // // camera automation
-  // if (lookingRight) {
-  //   if (stars.rotation.z < 0.3) {
-  //     stars.rotation.z += 0.0002;
-  //   } else {
-  //     lookingRight = false;
-  //   }
-  // } else {
-  //   if (stars.rotation.z > -0.3) {
-  //     stars.rotation.z -= 0.0002;
-  //   } else lookingRight = true;
-  // }
+  stars.rotation.y += yRotation;
 
   bgGeometry.getAttribute('position').needsUpdate = true;
   renderer.render(bgScene, bgCamera);
@@ -203,14 +223,20 @@ eyeMesh.lookAt(eyeOrigin);
 eyeScene.add(eyeMesh);
 
 // camera
-const eyeCamera = new THREE.PerspectiveCamera(
-  30,
-  eyeSizes.width / eyeSizes.height,
-  0.1,
-  100
+// const eyeCamera = new THREE.PerspectiveCamera(
+//   30,
+//   eyeSizes.width / eyeSizes.height,
+//   0.1,
+//   100
+// );
+const eyeCamera = new THREE.OrthographicCamera(
+  eyeSizes.width / -75, // Left (adjust this value)
+  eyeSizes.width / 75,  // Right (adjust this value)
+  eyeSizes.height / 75, // Top (adjust this value)
+  eyeSizes.height / -75, // Bottom (adjust this value)
 );
-eyeCamera.position.z = 10;
 
+eyeCamera.position.z = 10;
 eyeScene.add(eyeCamera);
 
 // light
@@ -250,10 +276,10 @@ function onmousemove(event) {
     eyeMesh.rotation.copy(startRotation);
 
     const eyeTween = new TWEEN.Tween(eyeMesh.rotation)
-      .to({ x: endRotation.x, y: endRotation.y, z: endRotation.z }, 250)
+      .to({ x: endRotation.x, y: endRotation.y, z: endRotation.z }, 150)
       .easing(TWEEN.Easing.Quadratic.Out);
     eyeTween.start();
-  });
+  }, 150);
 }
 
 // color change on hover
@@ -293,42 +319,11 @@ for (let i = 0; i < header.length; i++) {
     });
     // mouseout event, default color
     child.addEventListener('mouseout', function () {
-      const itemID = this.id;
+      // const itemID = this.id;
       eyeMaterial.color.set('white');
     });
   }
 }
-
-// // hover listener
-// abt.addEventListener('mouseover', abt_Color);
-// // hover exit listener
-// abt.addEventListener('mouseout', abt_Out);
-
-// const col3 = document.getElementById('hcol3');
-// // hover listener
-// col3.addEventListener('mouseover', mouseOver3);
-// // hover exit listener
-// col3.addEventListener('mouseout', mouseOut3);
-
-// function abt_Color() {
-//   eyeMaterial.color.set('red');
-//   console.log('apple');
-// }
-
-// function abt_Out() {
-//   eyeMaterial.color.set('white');
-//   console.log('orange');
-// }
-
-// function mouseOver3() {
-//   eyeMaterial.color.set('blue');
-//   console.log('apple');
-// }
-
-// function mouseOut3() {
-//   eyeMaterial.color.set('white');
-//   console.log('orange');
-// }
 
 // renderererer
 const eyeBox = document.querySelector('#eyebox');
@@ -349,59 +344,349 @@ eyeLoop();
 
 // sfx
 
-document.querySelector('#home').addEventListener('mouseenter', mouseOverSFX);
-document
-  .querySelector('#portfolio')
-  .addEventListener('mouseenter', mouseOverSFX);
-document.querySelector('#music').addEventListener('mouseenter', mouseOverSFX);
-document.querySelector('#gallery').addEventListener('mouseenter', mouseOverSFX);
+class Sfx {
+  constructor( source, volume = 0.1, loop = false ) {
+    this.audio = new Audio(source);
+    this.audio.volume = volume;
+    this.audio.loop = loop;
+  }
 
-let audioArr = document.getElementsByTagName('audio');
+  play() {
+    this.audio.play();
+  }
 
-function mouseOverSFX() {
-  audioArr[0].play();
-  audioArr[0].volume = 0.02;
+  cloneAndPlay() {
+    const clonedAudio = new Sfx(this.audio.src, this.audio.volume, this.audio.loop);
+    clonedAudio.play();
+  }
 }
 
-document.querySelector('#home').addEventListener('click', mouseClickSFX);
-document.querySelector('#portfolio').addEventListener('click', mouseClickSFX);
-document.querySelector('#music').addEventListener('click', mouseClickSFX);
-document.querySelector('#gallery').addEventListener('click', mouseClickSFX);
+const clickSfx  = new Sfx('http://codeskulptor-demos.commondatastorage.googleapis.com/GalaxyInvaders/bonus.wav');
+const enterSfx  = new Sfx('http://commondatastorage.googleapis.com/codeskulptor-demos/pyman_assets/eatpellet.ogg');
+const navSfx    = new Sfx('http://codeskulptor-demos.commondatastorage.googleapis.com/GalaxyInvaders/alien_shoot.wav');
 
-function mouseClickSFX() {
-  audioArr[1].play();
-  audioArr[1].volume = 0.02;
+const sfxElements = Array.from( document.querySelectorAll( 'a, #enterBtn, button' ) );
+
+for ( let sfxElement of sfxElements ) {
+  if ( sfxElement.id === 'enterBtn' ) {
+    sfxElement.addEventListener('click', () => {
+      playPauseSong();
+      clickSfx.cloneAndPlay();
+    });
+  } else {
+    if ( sfxElement.parentElement.id === 'navigation' ) {
+      sfxElement.addEventListener( 'click', () => navSfx.cloneAndPlay() );
+    } else {
+      sfxElement.addEventListener( 'mouseenter', () => enterSfx.cloneAndPlay() );
+      sfxElement.addEventListener( 'click', () => clickSfx.cloneAndPlay() );
+    }
+  }
+}
+
+// music player 
+
+class Song {
+  constructor( id, title, coverArt, musicFile, releaseDate, spotifyLink, oneLiner ){
+    this.id = id;
+    this.title = title;
+    this.coverArt = coverArt;
+    this.musicFile = new Audio(musicFile);
+    this.releaseDate = releaseDate;
+    this.spotifyLink = spotifyLink;
+    this.oneLiner = oneLiner;
+    this.isPlaying = false;
+  }
+
+  play () {
+    this.musicFile.play();
+    this.isPlaying = true;
+  }
+
+  pause () {
+    this.musicFile.pause();
+    this.isPlaying = false;
+  }
+
+  toggle () {
+    if (this.isPlaying) {
+      this.pause();
+    } else {
+      this.play();
+    }
+  }
+}
+
+let songs = [];
+const firstSongTitle = "profession of abuse";
+
+const getMusic = async() => {
+  try {
+    const response = await axios.get('https://uriah.website/wp-json/hs/v1/musics');
+    const musicData = response.data;
+
+    songs = musicData.map( songData => new Song (
+      songData.id,
+      songData.title,
+      songData.cover_art,
+      songData.music_file,
+      songData.release_date,
+      songData.spotify_link,
+      songData.one_liner
+    ));
+    const firstSongIndex = songs.findIndex(song => song.title === firstSongTitle);
+
+    if (firstSongIndex !== -1) {
+      const [ desiredSong ] = songs.splice( firstSongIndex, 1 );
+      songs.unshift( desiredSong );
+    }
+
+    console.log(songs);
+    loadSong();
+
+  } catch (err) {
+    console.log(err);
+  }
+}
+getMusic();
+// setInterval(getMusic, 5000);
+
+let currentSongIndex = 0;
+let currentSong = songs[currentSongIndex];
+let currentVolume = Math.pow(0.5, 1.5);
+let isDragging = false;
+
+const playBtn = document.getElementById('play-pause');
+const nextBtn = document.getElementById('next');
+const prevBtn = document.getElementById('prev');
+
+const progressBar = document.getElementById('progress');
+const progressContainer = document.getElementById('progress-container');
+
+const playIcon = document.querySelector('.play-icon');
+const pauseIcon = document.querySelector('.pause-icon');
+
+playBtn.onclick = playPauseSong;
+prevBtn.onclick = prevSong;
+nextBtn.onclick = nextSong;
+
+progressContainer.addEventListener("mousedown", startDragging);
+progressContainer.addEventListener("mousemove", updateDragging);
+progressContainer.addEventListener("mouseup", endDragging);
+
+const volumeButtons = document.querySelectorAll('.vol-btn');
+
+volumeButtons.forEach(item => {
+  item.addEventListener('click', () => {
+    const button = item.id;
+
+    volumeButtons.forEach(btn => btn.classList.remove('border-2'));
+  
+    item.classList.add('border-2');
+  
+    navSfx.cloneAndPlay();
+    
+    switch (button) {
+      case '0':
+        console.log('muted');
+        currentSong.musicFile.volume = 0;
+        break;
+      case '25':
+        currentSong.musicFile.volume = Math.pow(0.25, 1.5);
+        break;
+      case '50':
+        currentSong.musicFile.volume = Math.pow(0.5, 1.5);
+        break;
+      case '75':
+        currentSong.musicFile.volume = Math.pow(0.75, 1.5);
+        break;
+      case '100':
+        currentSong.musicFile.volume = 1;
+        break;
+    }
+  })
+})
+
+function updateProgress () {
+  const { currentTime, duration } = currentSong.musicFile
+  const progressPercent = ( currentTime / duration ) * 100;
+  progressBar.style.width = `${progressPercent}%`;
+
+  if (progressPercent === 100) {
+    setTimeout ( nextSong(), 250 )
+  }
+}
+
+function startDragging(e) {
+  isDragging = true;
+  currentSong = songs[currentSongIndex];
+  currentSong.pause()
+
+  playIcon.classList.remove('hidden');
+  pauseIcon.classList.add('hidden');
+
+  updateDragging(e);
+}
+
+function updateDragging(e) {
+  if (!isDragging) return;
+
+  const width = progressContainer.clientWidth;
+  const clickX = e.offsetX;
+  const duration = currentSong.musicFile.duration;
+
+  currentSong.musicFile.currentTime = (clickX / width) * duration;
+}
+
+function endDragging() {
+  isDragging = false;
+  playPauseSong()
+}
+
+// window.addEventListener('keydown', (downEvent) => {
+//   if ( downEvent.key === ' ' ) {
+//     playPauseSong();
+//   }
+// });
+
+function playPauseSong () {
+  currentSong = songs[currentSongIndex];
+  if (currentSong.isPlaying) {
+    currentSong.pause()
+    playIcon.classList.remove('hidden');
+    pauseIcon.classList.add('hidden');
+  } 
+  else {
+    currentSong.play()
+    playIcon.classList.add('hidden');
+    pauseIcon.classList.remove('hidden');
+  }
+}
+
+function nextSong () {
+  currentSong.musicFile.removeEventListener('timeupdate', updateProgress);
+  currentSong.pause();
+  currentSongIndex = (currentSongIndex + 1) % songs.length;
+  loadSong()
+  currentSong.musicFile.currentTime = 0;
+  playPauseSong()
+}
+
+function prevSong () {
+  currentSong.musicFile.removeEventListener('timeupdate', updateProgress);
+  currentSong.pause();
+  currentSongIndex = Math.max(currentSongIndex - 1, 0);
+  loadSong()
+  currentSong.musicFile.currentTime = 0;
+  playPauseSong()
+}
+
+function loadSong() {
+  currentSong = songs[currentSongIndex];
+  currentSong.musicFile.addEventListener('timeupdate', updateProgress);
+  currentSong.musicFile.volume = currentVolume;
+  const titleElement = document.getElementById('title');
+  const coverElements = document.querySelectorAll('#cover, #cover-tooltip');
+
+  titleElement.innerHTML = currentSong.title;
+  coverElements.forEach( e => {
+    e.src = currentSong.coverArt;
+  })
+
 }
 
 // percent scroll
 
-let percent = document.getElementById('percent');
-
 document.addEventListener('DOMContentLoaded', function () {
   let content = document.getElementById('content');
-  let children = content.children;
-  let totalHeight = Array.from(children).reduce(function (height, child) {
-    return height + child.scrollHeight;
-  }, 0);
-  console.log(totalHeight);
-  content.onscroll = function () {
+
+  const percent = document.getElementById('percent');
+  percent.style.opacity = '0';
+
+  let maxScrollDistance = content.scrollHeight - content.clientHeight;
+
+  window.addEventListener('load', () => {
+    maxScrollDistance = content.scrollHeight - content.clientHeight;
+    showOrHideScroll ()
+  })
+
+  window.onresize = function () {
+    maxScrollDistance = content.scrollHeight - content.clientHeight;
+    showOrHideScroll ()
+  }
+
+  router.afterEach(() => {
+    percent.classList.remove('transition-opacity');
+    percent.style.opacity = '0';
+    nextTick(() => {
+      window.requestAnimationFrame(() => {
+        window.requestAnimationFrame(() => {
+          window.requestAnimationFrame(() => {
+            window.requestAnimationFrame(() => {
+              setTimeout(() => {
+                showOrHideScroll ()
+              }, 100)
+            });     
+          });
+        });
+      });
+    });
+  });
+
+  function showOrHideScroll () {
+    maxScrollDistance = content.scrollHeight - content.clientHeight;
+    if ( maxScrollDistance === 0 ) {
+      percent.classList.remove('transition-opacity');
+      percent.style.opacity = '0';
+    } else {
+      setTimeout(() =>{
+        percent.classList.add('transition-opacity');
+        percent.style.opacity = '0.5';
+      }, 150)
+      percent.innerHTML = 'scroll';
+      scrollBoxContent();
+    }
+  }
+
+  // defining what should be painted in the scroll box
+  function scrollBoxContent(){
     let scrollDistance = content.scrollTop;
-    let maxScrollDistance = content.scrollHeight - content.clientHeight;
-    let progress = (scrollDistance / maxScrollDistance) * 100;
+    let progress = ( scrollDistance / maxScrollDistance ) * 100;
     progress = Math.max(0, Math.min(100, progress));
     percent.innerHTML = Math.round(progress) + '%';
-    console.log(Math.round(progress));
+    // console.log(Math.round(progress));
 
-    switch (progress) {
+    switch (Math.round(progress)) {
       case 0:
-        percent.style.display = 'none';
+        percent.innerHTML = 'scroll';
+        break;
+      case 99:
+        percent.innerHTML = 'no more';
         break;
       case 100:
-        percent.style.color = 'grey';
+        percent.innerHTML = 'no more';
         break;
       default:
-        percent.style.display = 'block';
-        percent.style.color = 'white';
+        setTimeout(() =>{
+          percent.classList.add('transition-opacity');
+          percent.style.opacity = '0.5';
+        }, 150)
+        percent.style.color = 'black';
     }
-  };
+  }
+
+  content.onscroll = scrollBoxContent;
+
+  // start button
+  const enterBtn = document.getElementById('enterBtn');
+  const enterBtnBox = document.getElementById('enterBtnBox');
+  const body = document.getElementById('contentBody');
+
+  enterBtn.addEventListener( 'click', () => {
+    body.style.opacity = '1';
+    // enterBtn.style.opacity = 'none';
+    enterBtnBox.style.opacity = '0';
+    enterBtnBox.style.zIndex = '-3';
+    showOrHideScroll();
+  })
 });
+

@@ -10,13 +10,16 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@heroicons/vue": "^2.0.18",
     "@tweenjs/tween.js": "^21.0.0",
     "autoprefixer": "^10.4.14",
+    "axios": "^1.4.0",
     "pinia": "^2.0.32",
     "postcss": "^8.4.21",
     "three": "^0.151.3",
     "vue": "^3.2.47",
-    "vue-router": "^4.1.6"
+    "vue-router": "^4.1.6",
+    "vue-router-better-scroller": "^0.0.0"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.2.0",

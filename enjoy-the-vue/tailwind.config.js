@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ['./src/App.vue', './src/index.css'],
+  content: ['./src/App.vue', './src/index.css', './src/components/MusicPlayer.vue', './src/components/NavMenu.vue'],
   theme: {
     container: {
       // center: true,
