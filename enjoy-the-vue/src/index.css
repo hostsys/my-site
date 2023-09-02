@@ -6,23 +6,31 @@
 html {
   overflow: hidden;
 } */
+@layer base {
+    :root {
+        --color-primary: 255 255 255;
+        --color-secondary: 10 10 10;
+        --color-tertiary: 99 99 99;
+    }
+}
+
 * {
-  font-family: hack;
+    font-family: hack;
 }
 
 #bg {
-  margin: 0px;
-  z-index: -2;
-  position: fixed;
-  top: 0;
-  left: 0;
+    margin: 0px;
+    z-index: -2;
+    position: fixed;
+    top: 0;
+    left: 0;
 }
 
 #eyebox {
-  z-index: -1;
-  position: static;
-  width: 150px;
-  height: 150px;
+    z-index: -1;
+    position: static;
+    width: 150px;
+    height: 150px;
 }
 
 /* p,
@@ -32,10 +40,10 @@ html {
 } */
 
 #eyebox {
-  position: relative;
-  z-index: 1; /* Ensure the canvas is above the background image */
+    position: relative;
+    z-index: 1; /* Ensure the canvas is above the background image */
 }
 
 ::-webkit-scrollbar {
-  width: 0;
+    width: 0;
 }

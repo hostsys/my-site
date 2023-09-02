@@ -1,41 +1,49 @@
 <script setup>
-import MusicPlayer from './components/MusicPlayer.vue';
-import NavMenu from './components/NavMenu.vue';
+import MusicPlayer from './components/MusicPlayer.vue'
+import NavMenu from './components/NavMenu.vue'
 </script>
 
-<link href="
+<link
+    href="
 https://cdn.jsdelivr.net/npm/hack-font@3.3.0/build/web/hack.min.css
-" rel="stylesheet">
-
-
+"
+    rel="stylesheet"
+/>
 
 <template>
-  <header class="text-white">
-    <canvas id="bg"></canvas>
-    <div class="absolute inset-0 flex justify-center items-center z-10 bg-black bg-opacity-70 transition-opacity duration-500" id="enterBtnBox">
-      <button id="enterBtn" class="border-2 border-white rounded-md py-5 px-7 hover:text-gray-500 hover:border-gray-500">enter</button>
-    </div>
-  </header>
-  <body class="flex flex-col md:p-10 p-5 lg:gap-20 gap-10 min-h-screen max-h-screen h-screen overflow-y-hidden transition-opacity duration-500 opacity-0 text-white" id="contentBody">
-    <!-- begin header -->
-    <!-- bg-star bg-no-repeat bg-center bg-contain -->
-    <NavMenu />
-    <!-- begin content -->
-    <div
-      id="content"
-      class="flex-grow
-        order-1
-        p-5
-        lg:p-10
-        border-2 border-white
-        rounded-sm
-        overflow-y-auto
-      "
+    <header class="text-primary">
+        <canvas id="bg"></canvas>
+        <div
+            class="absolute inset-0 z-10 flex items-center justify-center bg-secondary bg-opacity-70 transition-opacity duration-500"
+            id="enterBtnBox"
+        >
+            <button
+                id="enterBtn"
+                class="rounded-md border-2 border-primary px-7 py-5 hover:border-tertiary hover:text-tertiary"
+            >
+                enter
+            </button>
+        </div>
+    </header>
+    <body
+        class="flex h-screen max-h-screen min-h-screen flex-col gap-10 overflow-y-hidden p-5 text-primary opacity-0 transition-opacity duration-500 md:p-10 lg:gap-20"
+        id="contentBody"
     >
-    <div id="percent" class="fixed w-24 z-10 py-1 bg-white text-black text-center rounded-sm transition-opacity">scroll</div>
-      <router-view />
-    </div>
-  <!-- music player -->
-    <MusicPlayer />
-  </body>
+        <NavMenu />
+        <!-- begin content -->
+        <div
+            id="content"
+            class="order-1 flex-grow overflow-y-auto rounded-sm border-2 border-primary p-5 lg:p-10"
+        >
+            <div
+                id="percent"
+                class="fixed z-10 w-24 rounded-xs bg-primary py-1 text-scene text-center transition-opacity"
+            >
+                scroll
+            </div>
+            <router-view />
+        </div>
+        <!-- music player -->
+        <MusicPlayer />
+    </body>
 </template>
