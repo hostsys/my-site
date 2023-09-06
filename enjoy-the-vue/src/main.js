@@ -321,6 +321,7 @@ for (let i = 0; i < header.length; i++) {
 
 // change color theme
 const root = document.documentElement
+let currentThemeIndex = 0
 
 function changeTheme(themeName) {
     const theme = colorThemes[themeName]
@@ -343,7 +344,7 @@ const colorThemes = {
         stars: [0xffffff]
     },
     redTheme: {
-        primary: '220 15 15',
+        primary: '220 50 75',
         secondary: '0 0 0',
         tertiary: '100 100 100',
         scene: [0x020202],
@@ -351,16 +352,70 @@ const colorThemes = {
         stars: [0xff8c8c]
     },
     orangeTheme: {
-        primary: '220 75 0',
-        secondary: '255 0 0',
+        primary: '220 120 85',
+        secondary: '0 0 0',
         tertiary: '100 100 100',
         scene: [0x020202],
         sceneRgb: '0 0 0',
         stars: [0xff9b4f]
+    },
+    yellowTheme: {
+        primary: '220 220 100',
+        secondary: '0 0 0',
+        tertiary: '100 100 100',
+        scene: [0x020202],
+        sceneRgb: '0 0 0',
+        stars: [0xdcdc0f]
+    },
+    greenTheme: {
+        primary: '100 220 100',
+        secondary: '0 0 0',
+        tertiary: '100 100 100',
+        scene: [0x020202],
+        sceneRgb: '0 0 0',
+        stars: [0x0fdc0f]
+    },
+    blueTheme: {
+        primary: '100 100 220',
+        secondary: '0 0 0',
+        tertiary: '100 100 100',
+        scene: [0x020202],
+        sceneRgb: '0 0 0',
+        stars: [0x6464dc]
+    },
+    indigoTheme: {
+        primary: '220 100 220',
+        secondary: '0 0 0',
+        tertiary: '100 100 100',
+        scene: [0x020202],
+        sceneRgb: '0 0 0',
+        stars: [0xdc64dc]
     }
 }
 
-changeTheme('orangeTheme')
+const themes = Object.keys(colorThemes)
+
+changeTheme('defaultTheme')
+
+window.addEventListener('keydown', (downEvent) => {
+    if (downEvent.key.toLowerCase() === 'q') {
+        prevTheme()
+    } else if (downEvent.key.toLowerCase() === 'e') {
+        setTimeout(nextTheme, 100)
+    }
+})
+
+function nextTheme() {
+    currentThemeIndex = (currentThemeIndex + 1) % themes.length
+    const nextTheme = themes[currentThemeIndex]
+    changeTheme(nextTheme)
+}
+
+function prevTheme() {
+    currentThemeIndex = Math.max(currentThemeIndex - 1, 0)
+    const prevTheme = themes[currentThemeIndex]
+    changeTheme(prevTheme)
+}
 
 // renderererer
 const eyeBox = document.querySelector('#eyebox')
@@ -724,17 +779,17 @@ document.addEventListener('DOMContentLoaded', function () {
     const enterBtnBox = document.getElementById('enterBtnBox')
     const body = document.getElementById('contentBody')
 
-    // enterBtn.addEventListener('click', () => {
-    //     body.style.opacity = '1'
-    //     // enterBtn.style.opacity = 'none';
-    //     enterBtnBox.style.opacity = '0'
-    //     enterBtnBox.style.zIndex = '-3'
-    //     showOrHideScroll()
-    // })
+    enterBtn.addEventListener('click', () => {
+        body.style.opacity = '1'
+        // enterBtn.style.opacity = 'none';
+        enterBtnBox.style.opacity = '0'
+        enterBtnBox.style.zIndex = '-3'
+        showOrHideScroll()
+    })
 
-    body.style.opacity = '1'
-    // enterBtn.style.opacity = 'none';
-    enterBtnBox.style.opacity = '0'
-    enterBtnBox.style.zIndex = '-3'
-    showOrHideScroll()
+    // body.style.opacity = '1'
+    // // enterBtn.style.opacity = 'none';
+    // enterBtnBox.style.opacity = '0'
+    // enterBtnBox.style.zIndex = '-3'
+    // showOrHideScroll()
 })

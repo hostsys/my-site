@@ -15,7 +15,7 @@ import { ForwardIcon } from '@heroicons/vue/24/outline'
             <img
                 id="cover-tooltip"
                 src="https://media.tenor.com/kxefu8OQcD8AAAAC/loli-anime.gif"
-                class="absolute left-[calc(50%-2px)] hidden h-28 rounded-sm border-2 border-primary group-hover:top-[-160%] group-hover:block group-hover:scale-[200%] z-10"
+                class="absolute left-[calc(50%-2px)] z-10 hidden h-28 rounded-sm border-2 border-primary group-hover:top-[-160%] group-hover:block group-hover:scale-[200%]"
             />
         </div>
         <div id="music-container-inner" class="grid w-full grid-flow-col grid-cols-7 grid-rows-3">
@@ -59,7 +59,7 @@ import { ForwardIcon } from '@heroicons/vue/24/outline'
                 >
                     <div
                         id="progress"
-                        class="h-full w-0 bg-gradient-to-r from-purple-700 to-orange-700 bg-fixed"
+                        class="h-full w-0 bg-gradient-to-r from-primary to-secondary bg-fixed"
                     ></div>
                 </div>
             </div>
