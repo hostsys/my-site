@@ -14,9 +14,9 @@ html {
     }
 }
 
-* {
+/* * {
     font-family: hack;
-}
+} */
 
 #bg {
     margin: 0px;
@@ -26,12 +26,12 @@ html {
     left: 0;
 }
 
-#eyebox {
+/* #eyebox {
     z-index: -1;
     position: static;
     width: 150px;
     height: 150px;
-}
+} */
 
 /* p,
 span,
@@ -39,10 +39,10 @@ html {
   color: white;
 } */
 
-#eyebox {
+/* #eyebox {
     position: relative;
-    z-index: 1; /* Ensure the canvas is above the background image */
-}
+    z-index: 1;
+} */
 
 ::-webkit-scrollbar {
     width: 0;

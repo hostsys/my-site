@@ -21,31 +21,35 @@ import { ForwardIcon } from '@heroicons/vue/24/outline'
         <div id="music-container-inner" class="grid w-full grid-flow-col grid-cols-7 grid-rows-3">
             <div
                 id="volume-container"
-                class="col-span-1 row-span-1 flex w-full border-b-2 border-l-2 border-primary p-1 text-sm text-secondary"
+                class="col-span-1 row-span-1 flex w-full border-b-2 border-l-2 border-primary p-1 text-sm font-light text-secondary"
             >
                 <div
                     id="0"
-                    class="vol-btn flex w-1/5 cursor-pointer items-center justify-center bg-gray-800"
+                    class="vol-btn flex w-1/5 cursor-pointer items-center justify-center border-secondary bg-primary"
                 >
-                    0%
+                    <p>0%</p>
                 </div>
-                <div id="25" class="vol-btn flex w-1/5 items-center justify-center bg-blue-700">
-                    25%
+                <div id="25" class="vol-btn flex w-1/5 items-center justify-center bg-primary">
+                    <p>25%</p>
+                </div>
+                <div id="50" class="vol-btn flex w-1/5 items-center justify-center bg-primary">
+                    <p
+                        class="underline decoration-secondary decoration-dotted decoration-4 underline-offset-2"
+                    >
+                        50%
+                    </p>
                 </div>
                 <div
-                    id="50"
-                    class="vol-btn flex w-1/5 items-center justify-center border-2 bg-yellow-700"
+                    id="75"
+                    class="vol-btn flex w-1/5 items-center justify-center border-secondary bg-primary"
                 >
-                    50%
-                </div>
-                <div id="75" class="vol-btn flex w-1/5 items-center justify-center bg-orange-700">
-                    75%
+                    <p>75%</p>
                 </div>
                 <div
                     id="100"
-                    class="vol-btn flex w-1/5 cursor-pointer items-center justify-center bg-red-700"
+                    class="vol-btn flex w-1/5 cursor-pointer items-center justify-center border-secondary bg-primary"
                 >
-                    100%
+                    <p>100%</p>
                 </div>
             </div>
             <div id="music-info" class="col-span-1 row-span-2 flex flex-col justify-center pl-1">
@@ -59,7 +63,7 @@ import { ForwardIcon } from '@heroicons/vue/24/outline'
                 >
                     <div
                         id="progress"
-                        class="h-full w-0 bg-gradient-to-r from-primary to-secondary bg-fixed"
+                        class="h-full w-0 bg-gradient-to-r from-primary from-20% to-secondary bg-fixed"
                     ></div>
                 </div>
             </div>

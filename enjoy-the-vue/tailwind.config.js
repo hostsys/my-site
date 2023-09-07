@@ -7,6 +7,9 @@ module.exports = {
         './src/components/NavMenu.vue'
     ],
     theme: {
+        fontFamily: {
+            hack: ['hack']
+        },
         container: {
             // center: true,
         },

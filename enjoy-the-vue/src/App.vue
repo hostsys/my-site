@@ -14,7 +14,7 @@ https://cdn.jsdelivr.net/npm/hack-font@3.3.0/build/web/hack.min.css
     <header class="text-primary">
         <canvas id="bg"></canvas>
         <div
-            class="absolute inset-0 z-10 flex items-center justify-center bg-secondary bg-opacity-70 transition-opacity duration-500"
+            class="font-hack absolute inset-0 z-10 flex items-center justify-center bg-secondary bg-opacity-70 transition-opacity duration-500"
             id="enterBtnBox"
         >
             <button
@@ -26,7 +26,7 @@ https://cdn.jsdelivr.net/npm/hack-font@3.3.0/build/web/hack.min.css
         </div>
     </header>
     <body
-        class="flex h-screen max-h-screen min-h-screen flex-col gap-10 overflow-y-hidden p-5 text-primary opacity-0 transition-opacity duration-500 md:p-10 lg:gap-20"
+        class="font-hack flex h-screen max-h-screen min-h-screen flex-col gap-10 overflow-y-hidden p-5 text-primary opacity-0 transition-opacity duration-500 md:p-10 lg:gap-20"
         id="contentBody"
     >
         <NavMenu />
@@ -37,7 +37,7 @@ https://cdn.jsdelivr.net/npm/hack-font@3.3.0/build/web/hack.min.css
         >
             <div
                 id="percent"
-                class="fixed z-10 w-24 rounded-xs bg-primary py-1 text-scene text-center transition-opacity"
+                class="rounded-xs fixed z-10 w-24 bg-primary py-1 text-center text-scene transition-opacity"
             >
                 scroll
             </div>

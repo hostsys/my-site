@@ -332,6 +332,7 @@ function changeTheme(themeName) {
 
     bgScene.background = new THREE.Color(...theme.scene)
     bgMaterial.color.set(...theme.stars)
+    updateVolumeButtonColors()
 }
 
 const colorThemes = {
@@ -394,28 +395,40 @@ const colorThemes = {
 }
 
 const themes = Object.keys(colorThemes)
+let gayMode = false
+let rainbowInterval
 
 changeTheme('defaultTheme')
 
 window.addEventListener('keydown', (downEvent) => {
     if (downEvent.key.toLowerCase() === 'q') {
-        prevTheme()
+        currentThemeIndex = Math.max(currentThemeIndex - 1, 0)
+        const prevTheme = themes[currentThemeIndex]
+        changeTheme(prevTheme)
     } else if (downEvent.key.toLowerCase() === 'e') {
-        setTimeout(nextTheme, 100)
+        currentThemeIndex = (currentThemeIndex + 1) % themes.length
+        const nextTheme = themes[currentThemeIndex]
+        changeTheme(nextTheme)
+    } else if (downEvent.key.toLowerCase() === 'r') {
+        if (gayMode) {
+            clearInterval(rainbowInterval)
+            gayMode = false
+        } else {
+            rainbowInterval = setInterval(() => {
+                currentThemeIndex = (currentThemeIndex + 1) % themes.length
+                let nextTheme = themes[currentThemeIndex]
+                if (nextTheme === 'defaultTheme') {
+                    currentThemeIndex = (currentThemeIndex + 1) % themes.length
+                    nextTheme = themes[currentThemeIndex]
+                    changeTheme(nextTheme)
+                } else {
+                    changeTheme(nextTheme)
+                }
+            }, 250)
+            gayMode = true
+        }
     }
 })
-
-function nextTheme() {
-    currentThemeIndex = (currentThemeIndex + 1) % themes.length
-    const nextTheme = themes[currentThemeIndex]
-    changeTheme(nextTheme)
-}
-
-function prevTheme() {
-    currentThemeIndex = Math.max(currentThemeIndex - 1, 0)
-    const prevTheme = themes[currentThemeIndex]
-    changeTheme(prevTheme)
-}
 
 // renderererer
 const eyeBox = document.querySelector('#eyebox')
@@ -578,16 +591,25 @@ const volumeButtons = document.querySelectorAll('.vol-btn')
 volumeButtons.forEach((item) => {
     item.addEventListener('click', () => {
         const button = item.id
+        const btnTexts = document.querySelectorAll('.vol-btn p')
 
-        volumeButtons.forEach((btn) => btn.classList.remove('border-2'))
+        // Remove styles from all p elements
+        btnTexts.forEach((p) => {
+            p.classList.remove('underline')
+        })
 
-        item.classList.add('border-2')
+        item.querySelector('p').classList.add(
+            'underline',
+            'decoration-4',
+            'decoration-dotted',
+            'decoration-secondary',
+            'underline-offset-2'
+        )
 
         navSfx.cloneAndPlay()
 
         switch (button) {
             case '0':
-                console.log('muted')
                 currentSong.musicFile.volume = 0
                 break
             case '25':
@@ -605,6 +627,39 @@ volumeButtons.forEach((item) => {
         }
     })
 })
+
+function interpolateColor(color2, color1, percentage) {
+    const [r1, g1, b1] = color1.split(' ').map(Number)
+    const [r2, g2, b2] = color2.split(' ').map(Number)
+
+    const r = Math.round(r1 + (r2 - r1) * (percentage / 100))
+    const g = Math.round(g1 + (g2 - g1) * (percentage / 100))
+    const b = Math.round(b1 + (b2 - b1) * (percentage / 100))
+
+    return `rgb(${r} ${g} ${b})`
+}
+
+// Function to update the background colors of the volume buttons
+function updateVolumeButtonColors() {
+    // Get the primary and secondary colors from your CSS variables
+    const primaryColor = getComputedStyle(document.documentElement).getPropertyValue(
+        '--color-primary'
+    )
+    const secondaryColor = getComputedStyle(document.documentElement).getPropertyValue(
+        '--color-secondary'
+    )
+
+    // Set the background color for each volume button based on the percentage
+    document.querySelectorAll('.vol-btn').forEach((button, index) => {
+        const percentage = index * 17.5 + 30 // Adjust this for your desired steps
+        console.log(percentage)
+        const backgroundColor = interpolateColor(primaryColor, secondaryColor, percentage)
+        button.style.backgroundColor = backgroundColor
+    })
+}
+
+// Call the function initially
+updateVolumeButtonColors()
 
 function updateProgress() {
     const { currentTime, duration } = currentSong.musicFile
@@ -779,17 +834,17 @@ document.addEventListener('DOMContentLoaded', function () {
     const enterBtnBox = document.getElementById('enterBtnBox')
     const body = document.getElementById('contentBody')
 
-    enterBtn.addEventListener('click', () => {
-        body.style.opacity = '1'
-        // enterBtn.style.opacity = 'none';
-        enterBtnBox.style.opacity = '0'
-        enterBtnBox.style.zIndex = '-3'
-        showOrHideScroll()
-    })
+    // enterBtn.addEventListener('click', () => {
+    //     body.style.opacity = '1'
+    //     // enterBtn.style.opacity = 'none';
+    //     enterBtnBox.style.opacity = '0'
+    //     enterBtnBox.style.zIndex = '-3'
+    //     showOrHideScroll()
+    // })
 
-    // body.style.opacity = '1'
-    // // enterBtn.style.opacity = 'none';
-    // enterBtnBox.style.opacity = '0'
-    // enterBtnBox.style.zIndex = '-3'
-    // showOrHideScroll()
+    body.style.opacity = '1'
+    // enterBtn.style.opacity = 'none';
+    enterBtnBox.style.opacity = '0'
+    enterBtnBox.style.zIndex = '-3'
+    showOrHideScroll()
 })
