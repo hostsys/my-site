@@ -15,6 +15,9 @@ html {
     }
 }
 
+.no-select {
+    user-select: none;
+}
 /* * {
     animation: bgcolor 250ms linear infinite alternate;
 } */

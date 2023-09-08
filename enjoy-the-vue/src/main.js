@@ -601,12 +601,12 @@ const playIcon = document.querySelector('.play-icon')
 const pauseIcon = document.querySelector('.pause-icon')
 
 playBtn.onclick = playPauseSong
-prevBtn.onclick = prevSong
-nextBtn.onclick = nextSong
+prevBtn.onclick = () => changeSong(-1)
+nextBtn.onclick = () => changeSong(1)
 
 progressContainer.addEventListener('mousedown', startDragging)
-progressContainer.addEventListener('mousemove', updateDragging)
-progressContainer.addEventListener('mouseup', endDragging)
+window.addEventListener('mousemove', updateDragging)
+window.addEventListener('mouseup', endDragging)
 
 const volumeButtons = document.querySelectorAll('.vol-btn')
 
@@ -684,7 +684,7 @@ function updateProgress() {
     progressBar.style.width = `${progressPercent}%`
 
     if (progressPercent === 100) {
-        setTimeout(nextSong(), 250)
+        setTimeout(changeSong(1), 250)
     }
 }
 
@@ -692,6 +692,8 @@ function startDragging(e) {
     isDragging = true
     currentSong = songs[currentSongIndex]
     currentSong.pause()
+
+    document.body.classList.add('no-select')
 
     playIcon.classList.remove('hidden')
     pauseIcon.classList.add('hidden')
@@ -703,22 +705,19 @@ function updateDragging(e) {
     if (!isDragging) return
 
     const width = progressContainer.clientWidth
-    const clickX = e.offsetX
+    const clickX = e.clientX - progressContainer.getBoundingClientRect().left
     const duration = currentSong.musicFile.duration
 
     currentSong.musicFile.currentTime = (clickX / width) * duration
 }
 
 function endDragging() {
-    isDragging = false
-    playPauseSong()
+    if (isDragging) {
+        isDragging = false
+        document.body.classList.remove('no-select')
+        playPauseSong()
+    }
 }
-
-// window.addEventListener('keydown', (downEvent) => {
-//   if ( downEvent.key === ' ' ) {
-//     playPauseSong();
-//   }
-// });
 
 function playPauseSong() {
     currentSong = songs[currentSongIndex]
@@ -733,26 +732,17 @@ function playPauseSong() {
     }
 }
 
-function nextSong() {
+function changeSong(delta) {
     currentSong.musicFile.removeEventListener('timeupdate', updateProgress)
     currentSong.pause()
-    currentSongIndex = (currentSongIndex + 1) % songs.length
+    currentSongIndex = (currentSongIndex + delta + songs.length) % songs.length
     loadSong()
-    currentSong.musicFile.currentTime = 0
-    playPauseSong()
-}
-
-function prevSong() {
-    currentSong.musicFile.removeEventListener('timeupdate', updateProgress)
-    currentSong.pause()
-    currentSongIndex = Math.max(currentSongIndex - 1, 0)
-    loadSong()
-    currentSong.musicFile.currentTime = 0
     playPauseSong()
 }
 
 function loadSong() {
     currentSong = songs[currentSongIndex]
+    currentSong.musicFile.currentTime = 0
     currentSong.musicFile.addEventListener('timeupdate', updateProgress)
     currentSong.musicFile.volume = currentVolume
     const titleElement = document.getElementById('title')
@@ -851,17 +841,17 @@ document.addEventListener('DOMContentLoaded', function () {
     const enterBtnBox = document.getElementById('enterBtnBox')
     const body = document.getElementById('contentBody')
 
-    // enterBtn.addEventListener('click', () => {
-    //     body.style.opacity = '1'
-    //     // enterBtn.style.opacity = 'none';
-    //     enterBtnBox.style.opacity = '0'
-    //     enterBtnBox.style.zIndex = '-3'
-    //     showOrHideScroll()
-    // })
+    enterBtn.addEventListener('click', () => {
+        body.style.opacity = '1'
+        // enterBtn.style.opacity = 'none';
+        enterBtnBox.style.opacity = '0'
+        enterBtnBox.style.zIndex = '-3'
+        showOrHideScroll()
+    })
 
-    body.style.opacity = '1'
-    // enterBtn.style.opacity = 'none';
-    enterBtnBox.style.opacity = '0'
-    enterBtnBox.style.zIndex = '-3'
-    showOrHideScroll()
+    // body.style.opacity = '1'
+    // // enterBtn.style.opacity = 'none';
+    // enterBtnBox.style.opacity = '0'
+    // enterBtnBox.style.zIndex = '-3'
+    // showOrHideScroll()
 })
