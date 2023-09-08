@@ -11,6 +11,22 @@ html {
         --color-primary: 255 255 255;
         --color-secondary: 10 10 10;
         --color-tertiary: 99 99 99;
+        --prev-color-primary: 99 99 99;
+    }
+}
+
+/* * {
+    animation: bgcolor 250ms linear infinite alternate;
+} */
+
+@keyframes bgcolor {
+    from {
+        background-color: rgb(var(--prev-color-primary));
+        color: rgb(var(--prev-color-primary));
+    }
+    to {
+        background-color: rgb(var(--color-primary));
+        color: rgb(var(--prev-color-primary));
     }
 }
 

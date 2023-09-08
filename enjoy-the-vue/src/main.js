@@ -323,12 +323,19 @@ for (let i = 0; i < header.length; i++) {
 const root = document.documentElement
 let currentThemeIndex = 0
 
-function changeTheme(themeName) {
-    const theme = colorThemes[themeName]
+function changeTheme(toTheme, fromTheme) {
+    const theme = colorThemes[toTheme]
+    const oldTheme = colorThemes[fromTheme]
+
     root.style.setProperty('--color-primary', theme.primary)
     root.style.setProperty('--color-secondary', theme.secondary)
     root.style.setProperty('--color-tertiary', theme.tertiary)
     root.style.setProperty('--color-scene', theme.sceneRgb)
+    if (oldTheme) {
+        root.style.setProperty('--prev-color-primary', oldTheme.primary)
+    } else {
+        root.style.setProperty('--prev-color-primary', colorThemes['indigoTheme'].primary)
+    }
 
     bgScene.background = new THREE.Color(...theme.scene)
     bgMaterial.color.set(...theme.stars)
@@ -396,35 +403,50 @@ const colorThemes = {
 
 const themes = Object.keys(colorThemes)
 let gayMode = false
-let rainbowInterval
+let gayInterval
+
+const content = document.getElementById('content')
+const musicCont = document.getElementById('music-container')
+
+const gaySpeed = 361
 
 changeTheme('defaultTheme')
 
 window.addEventListener('keydown', (downEvent) => {
     if (downEvent.key.toLowerCase() === 'q') {
+        const fromTheme = themes[currentThemeIndex]
         currentThemeIndex = Math.max(currentThemeIndex - 1, 0)
         const prevTheme = themes[currentThemeIndex]
-        changeTheme(prevTheme)
+        changeTheme(prevTheme, fromTheme)
     } else if (downEvent.key.toLowerCase() === 'e') {
+        const fromTheme = themes[currentThemeIndex]
         currentThemeIndex = (currentThemeIndex + 1) % themes.length
         const nextTheme = themes[currentThemeIndex]
-        changeTheme(nextTheme)
+        console.log(nextTheme)
+        changeTheme(nextTheme, fromTheme)
     } else if (downEvent.key.toLowerCase() === 'r') {
         if (gayMode) {
-            clearInterval(rainbowInterval)
+            clearInterval(gayInterval)
+            content.classList.add('shadow-none')
+            musicCont.classList.add('shadow-none')
             gayMode = false
         } else {
-            rainbowInterval = setInterval(() => {
+            setTimeout(() => {
+                content.classList.remove('shadow-none')
+                musicCont.classList.remove('shadow-none')
+            }, gaySpeed)
+            gayInterval = setInterval(() => {
+                const fromTheme = themes[currentThemeIndex]
                 currentThemeIndex = (currentThemeIndex + 1) % themes.length
                 let nextTheme = themes[currentThemeIndex]
                 if (nextTheme === 'defaultTheme') {
                     currentThemeIndex = (currentThemeIndex + 1) % themes.length
                     nextTheme = themes[currentThemeIndex]
-                    changeTheme(nextTheme)
+                    changeTheme(nextTheme, fromTheme)
                 } else {
-                    changeTheme(nextTheme)
+                    changeTheme(nextTheme, fromTheme)
                 }
-            }, 250)
+            }, gaySpeed)
             gayMode = true
         }
     }
@@ -639,9 +661,7 @@ function interpolateColor(color2, color1, percentage) {
     return `rgb(${r} ${g} ${b})`
 }
 
-// Function to update the background colors of the volume buttons
 function updateVolumeButtonColors() {
-    // Get the primary and secondary colors from your CSS variables
     const primaryColor = getComputedStyle(document.documentElement).getPropertyValue(
         '--color-primary'
     )
@@ -649,16 +669,13 @@ function updateVolumeButtonColors() {
         '--color-secondary'
     )
 
-    // Set the background color for each volume button based on the percentage
     document.querySelectorAll('.vol-btn').forEach((button, index) => {
         const percentage = index * 17.5 + 30 // Adjust this for your desired steps
-        console.log(percentage)
         const backgroundColor = interpolateColor(primaryColor, secondaryColor, percentage)
         button.style.backgroundColor = backgroundColor
     })
 }
 
-// Call the function initially
 updateVolumeButtonColors()
 
 function updateProgress() {
