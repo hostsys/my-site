@@ -5,10 +5,7 @@ import { PauseIcon } from '@heroicons/vue/24/outline'
 import { ForwardIcon } from '@heroicons/vue/24/outline'
 </script>
 <template>
-    <div
-        id="music-container"
-        class="order-3 flex max-h-32 rounded-sm border-2 border-primary shadow-[0_0_15px] shadow-none"
-    >
+    <div id="music-container" class="order-3 flex max-h-32 rounded-sm border-2 border-primary">
         <div id="img-container" class="group relative flex h-28 w-28 flex-shrink-0 p-1">
             <img
                 id="cover"

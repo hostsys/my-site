@@ -323,19 +323,13 @@ for (let i = 0; i < header.length; i++) {
 const root = document.documentElement
 let currentThemeIndex = 0
 
-function changeTheme(toTheme, fromTheme) {
+function changeTheme(toTheme) {
     const theme = colorThemes[toTheme]
-    const oldTheme = colorThemes[fromTheme]
 
     root.style.setProperty('--color-primary', theme.primary)
     root.style.setProperty('--color-secondary', theme.secondary)
     root.style.setProperty('--color-tertiary', theme.tertiary)
     root.style.setProperty('--color-scene', theme.sceneRgb)
-    if (oldTheme) {
-        root.style.setProperty('--prev-color-primary', oldTheme.primary)
-    } else {
-        root.style.setProperty('--prev-color-primary', colorThemes['indigoTheme'].primary)
-    }
 
     bgScene.background = new THREE.Color(...theme.scene)
     bgMaterial.color.set(...theme.stars)
@@ -404,53 +398,59 @@ const colorThemes = {
 const themes = Object.keys(colorThemes)
 let gayMode = false
 let gayInterval
-
-const content = document.getElementById('content')
-const musicCont = document.getElementById('music-container')
-
 const gaySpeed = 361
+
+const shadowElements = document.querySelectorAll('#content, #music-container')
+const shadowClass = 'shadow-[0_0_25px]'
 
 changeTheme('defaultTheme')
 
 window.addEventListener('keydown', (downEvent) => {
-    if (downEvent.key.toLowerCase() === 'q') {
-        const fromTheme = themes[currentThemeIndex]
+    const key = downEvent.key.toLowerCase()
+    changeThemeByKey(key)
+})
+
+function changeThemeByKey(key) {
+    if (key === 'q') {
         currentThemeIndex = Math.max(currentThemeIndex - 1, 0)
         const prevTheme = themes[currentThemeIndex]
-        changeTheme(prevTheme, fromTheme)
-    } else if (downEvent.key.toLowerCase() === 'e') {
-        const fromTheme = themes[currentThemeIndex]
+        changeTheme(prevTheme)
+    } else if (key === 'e') {
         currentThemeIndex = (currentThemeIndex + 1) % themes.length
         const nextTheme = themes[currentThemeIndex]
-        console.log(nextTheme)
-        changeTheme(nextTheme, fromTheme)
-    } else if (downEvent.key.toLowerCase() === 'r') {
-        if (gayMode) {
-            clearInterval(gayInterval)
-            content.classList.add('shadow-none')
-            musicCont.classList.add('shadow-none')
-            gayMode = false
-        } else {
-            setTimeout(() => {
-                content.classList.remove('shadow-none')
-                musicCont.classList.remove('shadow-none')
-            }, gaySpeed)
-            gayInterval = setInterval(() => {
-                const fromTheme = themes[currentThemeIndex]
-                currentThemeIndex = (currentThemeIndex + 1) % themes.length
-                let nextTheme = themes[currentThemeIndex]
-                if (nextTheme === 'defaultTheme') {
-                    currentThemeIndex = (currentThemeIndex + 1) % themes.length
-                    nextTheme = themes[currentThemeIndex]
-                    changeTheme(nextTheme, fromTheme)
-                } else {
-                    changeTheme(nextTheme, fromTheme)
-                }
-            }, gaySpeed)
-            gayMode = true
-        }
+        changeTheme(nextTheme)
+    } else if (key === 'r') {
+        toggleGayMode()
     }
-})
+}
+
+function toggleGayMode() {
+    if (gayMode) {
+        clearInterval(gayInterval)
+        shadowElements.forEach((e) => {
+            e.classList.remove(shadowClass)
+        })
+        gayMode = false
+    } else {
+        setTimeout(() => {
+            shadowElements.forEach((e) => {
+                e.classList.add(shadowClass)
+            })
+        }, gaySpeed)
+        gayInterval = setInterval(() => {
+            currentThemeIndex = (currentThemeIndex + 1) % themes.length
+            let nextTheme = themes[currentThemeIndex]
+            if (nextTheme === 'defaultTheme') {
+                currentThemeIndex = (currentThemeIndex + 1) % themes.length
+                nextTheme = themes[currentThemeIndex]
+                changeTheme(nextTheme)
+            } else {
+                changeTheme(nextTheme)
+            }
+        }, gaySpeed)
+        gayMode = true
+    }
+}
 
 // renderererer
 const eyeBox = document.querySelector('#eyebox')
@@ -847,6 +847,7 @@ document.addEventListener('DOMContentLoaded', function () {
         enterBtnBox.style.opacity = '0'
         enterBtnBox.style.zIndex = '-3'
         showOrHideScroll()
+        playPauseSong
     })
 
     // body.style.opacity = '1'

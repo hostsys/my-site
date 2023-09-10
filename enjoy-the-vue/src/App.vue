@@ -33,7 +33,7 @@ https://cdn.jsdelivr.net/npm/hack-font@3.3.0/build/web/hack.min.css
         <!-- begin content -->
         <div
             id="content"
-            class="order-1 flex-grow overflow-y-auto rounded-sm border-2 border-primary p-5 shadow-[0_0_15px] shadow-none shadow-primary lg:p-10"
+            class="order-1 flex-grow overflow-y-auto rounded-sm border-2 border-primary p-5 shadow-primary lg:p-10"
         >
             <div
                 id="percent"
