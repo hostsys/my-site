@@ -5,7 +5,10 @@ import { PauseIcon } from '@heroicons/vue/24/outline'
 import { ForwardIcon } from '@heroicons/vue/24/outline'
 </script>
 <template>
-    <div id="music-container" class="order-3 flex max-h-32 rounded-sm border-2 border-primary">
+    <div
+        id="music-container"
+        class="order-3 flex max-h-32 rounded-sm border-2 border-primary transition-colors duration-500 ease-in-out"
+    >
         <div id="img-container" class="group relative flex h-28 w-28 flex-shrink-0 p-1">
             <img
                 id="cover"
@@ -21,18 +24,24 @@ import { ForwardIcon } from '@heroicons/vue/24/outline'
         <div id="music-container-inner" class="grid w-full grid-flow-col grid-cols-7 grid-rows-3">
             <div
                 id="volume-container"
-                class="col-span-1 row-span-1 flex w-full border-b-2 border-l-2 border-primary p-1 text-sm font-light text-secondary"
+                class="no-select col-span-1 row-span-1 flex w-full border-b-2 border-l-2 border-primary p-1 text-sm text-secondary"
             >
                 <div
                     id="0"
-                    class="vol-btn flex w-1/5 cursor-pointer items-center justify-center border-secondary bg-primary"
+                    class="vol-btn transition-colors-manual flex w-1/5 cursor-pointer items-center justify-center border-secondary bg-primary"
                 >
                     <p>0%</p>
                 </div>
-                <div id="25" class="vol-btn flex w-1/5 items-center justify-center bg-primary">
+                <div
+                    id="25"
+                    class="vol-btn transition-colors-manual flex w-1/5 items-center justify-center bg-primary"
+                >
                     <p>25%</p>
                 </div>
-                <div id="50" class="vol-btn flex w-1/5 items-center justify-center bg-primary">
+                <div
+                    id="50"
+                    class="vol-btn transition-colors-manual flex w-1/5 items-center justify-center bg-primary"
+                >
                     <p
                         class="underline decoration-secondary decoration-dotted decoration-4 underline-offset-2"
                     >
@@ -41,13 +50,13 @@ import { ForwardIcon } from '@heroicons/vue/24/outline'
                 </div>
                 <div
                     id="75"
-                    class="vol-btn flex w-1/5 items-center justify-center border-secondary bg-primary"
+                    class="vol-btn transition-colors-manual flex w-1/5 items-center justify-center border-secondary bg-primary"
                 >
                     <p>75%</p>
                 </div>
                 <div
                     id="100"
-                    class="vol-btn flex w-1/5 cursor-pointer items-center justify-center border-secondary bg-primary"
+                    class="vol-btn transition-colors-manual flex w-1/5 cursor-pointer items-center justify-center border-secondary bg-primary"
                 >
                     <p>100%</p>
                 </div>

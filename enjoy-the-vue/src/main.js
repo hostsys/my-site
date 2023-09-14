@@ -1,4 +1,4 @@
-import { createApp } from 'vue'
+import { createApp, render } from 'vue'
 // import { createRouterScroller } from 'vue-router-better-scroller';
 import { nextTick } from 'vue'
 import { createPinia } from 'pinia'
@@ -82,6 +82,7 @@ bgScene.add(bgCamera)
 const canvas = document.querySelector('#bg')
 const renderer = new THREE.WebGLRenderer({ canvas })
 
+renderer.setPixelRatio(window.devicePixelRatio)
 renderer.setSize(sizes.width, sizes.height)
 renderer.render(bgScene, bgCamera)
 
@@ -456,6 +457,7 @@ function toggleGayMode() {
 const eyeBox = document.querySelector('#eyebox')
 const eyeRenderer = new THREE.WebGLRenderer({ canvas: eyeBox, alpha: true })
 
+eyeRenderer.setPixelRatio(window.devicePixelRatio * 0.5)
 eyeRenderer.setSize(eyeSizes.width, eyeSizes.height)
 eyeRenderer.render(eyeScene, eyeCamera)
 
@@ -775,7 +777,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     router.afterEach(() => {
-        percent.classList.remove('transition-opacity')
         percent.style.opacity = '0'
         nextTick(() => {
             window.requestAnimationFrame(() => {
@@ -795,11 +796,9 @@ document.addEventListener('DOMContentLoaded', function () {
     function showOrHideScroll() {
         maxScrollDistance = content.scrollHeight - content.clientHeight
         if (maxScrollDistance === 0) {
-            percent.classList.remove('transition-opacity')
             percent.style.opacity = '0'
         } else {
             setTimeout(() => {
-                percent.classList.add('transition-opacity')
                 percent.style.opacity = '0.4'
             }, 150)
             percent.innerHTML = 'scroll'
@@ -827,7 +826,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 break
             default:
                 setTimeout(() => {
-                    percent.classList.add('transition-opacity')
                     percent.style.opacity = '0.4'
                 }, 150)
             // percent.style.setProperty('--color-secondary', sceneColor)

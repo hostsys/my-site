@@ -3,7 +3,10 @@ import { RouterLink } from 'vue-router'
 </script>
 
 <template>
-    <div id="header" class="order-2 flex items-center justify-center">
+    <div
+        id="header"
+        class="order-2 flex items-center justify-center transition-colors duration-500 ease-in-out"
+    >
         <!-- column 1 -->
         <div id="hcol1" class="pr-4 text-right md:pr-14">
             <router-link to="/" id="home">home</router-link><br />
