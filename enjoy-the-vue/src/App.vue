@@ -14,7 +14,7 @@ import NavMenu from './components/NavMenu.vue'
         >
             <button
                 id="enterBtn"
-                class="rounded-md border-2 border-primary px-7 py-5 shadow-[0_0_25px] hover:border-tertiary hover:text-tertiary"
+                class="rounded-md border-2 border-primary px-7 py-5 shadow-[0_0_25px] shadow-transparent hover:border-tertiary hover:text-tertiary"
             >
                 enter
             </button>
@@ -28,11 +28,11 @@ import NavMenu from './components/NavMenu.vue'
         <!-- begin content -->
         <div
             id="content"
-            class="group order-1 flex-grow overflow-y-auto rounded-sm border-2 border-solid border-primary p-5 shadow-primary transition-colors duration-500 ease-in-out hover:border-4 hover:border-double lg:p-10"
+            class="group order-1 flex-grow overflow-y-auto rounded-sm border-2 border-solid border-primary p-5 shadow-primary transition-all duration-300 md:hover:border-4 md:hover:border-double md:hover:p-[calc(2.5rem-2.1px)] lg:p-10"
         >
             <div
                 id="percent"
-                class="rounded-xs fixed left-20 top-20 z-10 w-24 bg-primary py-1 text-center text-scene transition-opacity"
+                class="rounded-xs fixed left-8 top-8 z-10 w-24 bg-primary py-1 text-center text-scene transition-opacity md:left-20 md:top-20"
             >
                 scroll
             </div>

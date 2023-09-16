@@ -7,7 +7,7 @@ import { ForwardIcon } from '@heroicons/vue/24/outline'
 <template>
     <div
         id="music-container"
-        class="order-3 flex max-h-32 rounded-sm border-2 border-primary transition-colors duration-500 ease-in-out"
+        class="order-3 flex max-h-28 rounded-sm border-2 border-primary transition-colors duration-300"
     >
         <div id="img-container" class="group relative flex h-28 w-28 flex-shrink-0 p-1">
             <img
@@ -24,11 +24,11 @@ import { ForwardIcon } from '@heroicons/vue/24/outline'
         <div id="music-container-inner" class="grid w-full grid-flow-col grid-cols-7 grid-rows-3">
             <div
                 id="volume-container"
-                class="no-select col-span-1 row-span-1 flex w-full border-b-2 border-l-2 border-primary p-1 text-sm text-secondary"
+                class="no-select col-span-1 row-span-1 flex w-full border-b-2 border-l-2 border-primary p-1 text-sm text-secondary transition-colors duration-300"
             >
                 <div
                     id="0"
-                    class="vol-btn transition-colors-manual flex w-1/5 cursor-pointer items-center justify-center border-secondary bg-primary"
+                    class="vol-btn transition-colors-manual flex w-1/5 cursor-pointer items-center justify-center bg-primary"
                 >
                     <p>0%</p>
                 </div>
@@ -68,11 +68,11 @@ import { ForwardIcon } from '@heroicons/vue/24/outline'
             <div id="music-progress" class="col-span-6 row-span-1 flex">
                 <div
                     id="progress-container"
-                    class="w-full cursor-grab border-b-2 border-l-2 border-primary p-1 active:cursor-grabbing"
+                    class="w-full cursor-grab border-b-2 border-l-2 border-primary p-1 transition-colors duration-300 active:cursor-grabbing"
                 >
                     <div
                         id="progress"
-                        class="h-full w-0 bg-gradient-to-r from-primary from-20% to-secondary bg-fixed"
+                        class="h-full w-0 bg-gradient-to-r from-primary from-20% to-secondary bg-fixed transition-all duration-150 ease-in"
                     ></div>
                 </div>
             </div>

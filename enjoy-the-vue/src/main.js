@@ -424,20 +424,21 @@ function changeThemeByKey(key) {
         toggleGayMode()
     }
 }
-
 function toggleGayMode() {
     if (gayMode) {
         clearInterval(gayInterval)
+        progressBar.classList.add('bg-gradient-to-r')
+        progressBar.classList.remove('bg-primary')
         shadowElements.forEach((e) => {
             e.classList.remove(shadowClass)
         })
         gayMode = false
     } else {
-        setTimeout(() => {
-            shadowElements.forEach((e) => {
-                e.classList.add(shadowClass)
-            })
+        shadowElements.forEach((e) => {
+            e.classList.add(shadowClass)
         }, gaySpeed)
+        progressBar.classList.remove('bg-gradient-to-r')
+        progressBar.classList.add('bg-primary')
         gayInterval = setInterval(() => {
             currentThemeIndex = (currentThemeIndex + 1) % themes.length
             let nextTheme = themes[currentThemeIndex]
@@ -500,7 +501,9 @@ const navSfx = new Sfx(
     'http://codeskulptor-demos.commondatastorage.googleapis.com/GalaxyInvaders/alien_shoot.wav'
 )
 
-const sfxElements = Array.from(document.querySelectorAll('a, #enterBtn, button'))
+const sfxElements = Array.from(
+    document.querySelectorAll('a, #enterBtn, button, #progress-container')
+)
 
 for (let sfxElement of sfxElements) {
     if (sfxElement.id === 'enterBtn') {
@@ -509,7 +512,10 @@ for (let sfxElement of sfxElements) {
             clickSfx.cloneAndPlay()
         })
     } else {
-        if (sfxElement.parentElement.id === 'navigation') {
+        if (
+            sfxElement.parentElement.id === 'navigation' ||
+            sfxElement.id === 'progress-container'
+        ) {
             sfxElement.addEventListener('click', () => navSfx.cloneAndPlay())
         } else {
             sfxElement.addEventListener('mouseenter', () => enterSfx.cloneAndPlay())
