@@ -21,7 +21,7 @@ import NavMenu from './components/NavMenu.vue'
         </div>
     </header>
     <body
-        class="flex h-screen max-h-screen min-h-screen flex-col gap-10 overflow-y-hidden p-5 font-pixel text-base text-primary opacity-0 md:p-10 lg:gap-20"
+        class="flex h-screen max-h-screen min-h-screen cursor-default flex-col gap-10 overflow-y-hidden p-5 font-pixel text-base text-primary opacity-0 md:p-10 lg:gap-20"
         id="contentBody"
     >
         <NavMenu />

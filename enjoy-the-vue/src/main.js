@@ -339,7 +339,7 @@ function changeTheme(toTheme) {
 
 const colorThemes = {
     defaultTheme: {
-        primary: '255 255 255',
+        primary: '220 220 220',
         secondary: '0 0 0',
         tertiary: '100 100 100',
         scene: [0x020202],
@@ -427,8 +427,6 @@ function changeThemeByKey(key) {
 function toggleGayMode() {
     if (gayMode) {
         clearInterval(gayInterval)
-        progressBar.classList.add('bg-gradient-to-r')
-        progressBar.classList.remove('bg-primary')
         shadowElements.forEach((e) => {
             e.classList.remove(shadowClass)
         })
@@ -437,8 +435,6 @@ function toggleGayMode() {
         shadowElements.forEach((e) => {
             e.classList.add(shadowClass)
         }, gaySpeed)
-        progressBar.classList.remove('bg-gradient-to-r')
-        progressBar.classList.add('bg-primary')
         gayInterval = setInterval(() => {
             currentThemeIndex = (currentThemeIndex + 1) % themes.length
             let nextTheme = themes[currentThemeIndex]
@@ -845,18 +841,18 @@ document.addEventListener('DOMContentLoaded', function () {
     const enterBtnBox = document.getElementById('enterBtnBox')
     const body = document.getElementById('contentBody')
 
-    enterBtn.addEventListener('click', () => {
-        body.style.opacity = '1'
-        // enterBtn.style.opacity = 'none';
-        enterBtnBox.style.opacity = '0'
-        enterBtnBox.style.zIndex = '-3'
-        showOrHideScroll()
-        playPauseSong
-    })
+    // enterBtn.addEventListener('click', () => {
+    //     body.style.opacity = '1'
+    //     // enterBtn.style.opacity = 'none';
+    //     enterBtnBox.style.opacity = '0'
+    //     enterBtnBox.style.zIndex = '-3'
+    //     showOrHideScroll()
+    //     playPauseSong
+    // })
 
-    // body.style.opacity = '1'
-    // // enterBtn.style.opacity = 'none';
-    // enterBtnBox.style.opacity = '0'
-    // enterBtnBox.style.zIndex = '-3'
-    // showOrHideScroll()
+    body.style.opacity = '1'
+    // enterBtn.style.opacity = 'none';
+    enterBtnBox.style.opacity = '0'
+    enterBtnBox.style.zIndex = '-3'
+    showOrHideScroll()
 })

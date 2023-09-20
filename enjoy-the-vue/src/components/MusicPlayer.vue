@@ -72,8 +72,12 @@ import { ForwardIcon } from '@heroicons/vue/24/outline'
                 >
                     <div
                         id="progress"
-                        class="h-full w-0 bg-gradient-to-r from-primary from-20% to-secondary bg-fixed transition-all duration-150 ease-in"
-                    ></div>
+                        class="h-full w-0 bg-primary bg-fixed transition-all duration-150 ease-in"
+                    >
+                        <div
+                            class="h-full bg-gradient-to-r from-transparent from-20% to-secondary bg-fixed"
+                        ></div>
+                    </div>
                 </div>
             </div>
             <!-- bg-gradient-to-r from-purple-700 to-orange-700 -->

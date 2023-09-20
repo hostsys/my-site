@@ -29,6 +29,9 @@ module.exports = {
                 secondary: 'rgb(var(--color-secondary) / <alpha-value>)',
                 tertiary: 'rgb(var(--color-tertiary) / <alpha-value>)',
                 scene: 'rgb(var(--color-scene) / <alpha-value>)'
+            },
+            cursor: {
+                pixel: 'url(/cursor/cursor-placeholder.png), default'
             }
         }
     },
