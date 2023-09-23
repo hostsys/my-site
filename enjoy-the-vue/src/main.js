@@ -856,3 +856,13 @@ document.addEventListener('DOMContentLoaded', function () {
     enterBtnBox.style.zIndex = '-3'
     showOrHideScroll()
 })
+
+// cursor change on click
+
+window.addEventListener('mousedown', () => {
+    document.querySelector('.cursor-default').style.cursor = 'url(/cursor/cursor-stab.png), default'
+})
+window.addEventListener('mouseup', () => {
+    document.querySelector('.cursor-default').style.cursor =
+        'url(/cursor/cursor-placeholder.png), default'
+})

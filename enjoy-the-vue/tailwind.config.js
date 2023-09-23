@@ -31,7 +31,10 @@ module.exports = {
                 scene: 'rgb(var(--color-scene) / <alpha-value>)'
             },
             cursor: {
-                pixel: 'url(/cursor/cursor-placeholder.png), default'
+                default: 'url(/cursor/cursor-placeholder.png), default',
+                active: 'url(/cursor/cursor-active.png), pointer',
+                stab: 'url(/cursor/cursor-stab.png), pointer',
+                stabbing: 'url(/cursor/cursor-active-stab.png), pointer'
             }
         }
     },

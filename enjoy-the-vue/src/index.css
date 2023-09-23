@@ -27,11 +27,22 @@ html {
     font-family: 'Runescape';
     src: url('/fonts/runescape_uf.ttf');
 }
-*,
-*:before,
-*:after {
-    @apply cursor-pixel;
+
+a,
+button,
+router-link {
+    @apply cursor-active;
 }
+
+a:active,
+button:active,
+router-link:active {
+    @apply cursor-stabbing;
+}
+
+/* .cursor-default {
+    cursor: url(/cursor/cursor-placeholder.png), default;
+} */
 
 .no-select {
     user-select: none;
@@ -57,6 +68,7 @@ html {
     image-rendering: -o-crisp-edges;
     -ms-interpolation-mode: nearest-neighbor;
     image-rendering: crisp-edges;
+    scrollbar-width: none;
 }
 
 #bg {

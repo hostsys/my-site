@@ -9,7 +9,7 @@ import NavMenu from './components/NavMenu.vue'
     <header class="text-primary">
         <canvas id="bg"></canvas>
         <div
-            class="absolute inset-0 z-10 flex items-center justify-center bg-secondary bg-opacity-70 font-pixel transition-opacity"
+            class="absolute inset-0 z-10 flex cursor-pixel items-center justify-center bg-secondary bg-opacity-70 font-pixel transition-opacity"
             id="enterBtnBox"
         >
             <button
@@ -28,11 +28,11 @@ import NavMenu from './components/NavMenu.vue'
         <!-- begin content -->
         <div
             id="content"
-            class="group order-1 flex-grow overflow-y-auto rounded-sm border-2 border-solid border-primary p-5 shadow-primary transition-all duration-300 md:hover:border-4 md:hover:border-double md:hover:p-[calc(2.5rem-2.1px)] lg:p-10"
+            class="order-1 flex-grow overflow-y-auto rounded-sm border-2 border-solid border-primary border-opacity-80 p-5 shadow-primary transition-all duration-300 hover:border-opacity-100 lg:p-10"
         >
             <div
                 id="percent"
-                class="rounded-xs fixed left-8 top-8 z-10 w-24 bg-primary py-1 text-center text-scene transition-opacity md:left-20 md:top-20"
+                class="rounded-xs fixed left-8 top-8 z-10 w-24 bg-primary py-1 text-center text-scene transition-all duration-300 md:left-20 md:top-20"
             >
                 scroll
             </div>
