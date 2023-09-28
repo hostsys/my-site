@@ -329,7 +329,7 @@ function changeTheme(toTheme) {
 
     root.style.setProperty('--color-primary', theme.primary)
     root.style.setProperty('--color-secondary', theme.secondary)
-    root.style.setProperty('--color-tertiary', theme.tertiary)
+    // root.style.setProperty('--color-tertiary', theme.tertiary)
     root.style.setProperty('--color-scene', theme.sceneRgb)
 
     bgScene.background = new THREE.Color(...theme.scene)
@@ -866,3 +866,14 @@ window.addEventListener('mouseup', () => {
     document.querySelector('.cursor-default').style.cursor =
         'url(/cursor/cursor-placeholder.png), default'
 })
+
+// color picker in box
+// document.addEventListener('DOMContentLoaded', function () {
+//     const theBox = document.getElementById('the-box')
+//     const colorPicker = document.getElementById('color-picker')
+
+//     theBox.addEventListener('click', () => {
+//         colorPicker.classList.toggle('hidden')
+//         console.log('should be visible')
+//     })
+// })

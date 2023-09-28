@@ -4,7 +4,8 @@ module.exports = {
         './src/App.vue',
         './src/index.css',
         './src/components/MusicPlayer.vue',
-        './src/components/NavMenu.vue'
+        './src/components/NavMenu.vue',
+        './src/views/*'
     ],
     theme: {
         fontFamily: {
@@ -12,9 +13,9 @@ module.exports = {
             pixel: ['Birch Leaf']
         },
         fontSize: {
-            sm: '1rem',
-            base: '1.2rem',
-            xl: '1.25rem',
+            sm: '0.9rem',
+            base: '1.1rem',
+            xl: '1.5rem',
             '2xl': '1.563rem',
             '3xl': '1.953rem',
             '4xl': '2.441rem',
@@ -28,7 +29,8 @@ module.exports = {
                 primary: 'rgb(var(--color-primary) / <alpha-value>)',
                 secondary: 'rgb(var(--color-secondary) / <alpha-value>)',
                 tertiary: 'rgb(var(--color-tertiary) / <alpha-value>)',
-                scene: 'rgb(var(--color-scene) / <alpha-value>)'
+                scene: 'rgb(var(--color-scene) / <alpha-value>)',
+                box: 'var(--box-color)'
             },
             cursor: {
                 default: 'url(/cursor/cursor-placeholder.png), default',

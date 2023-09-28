@@ -5,7 +5,7 @@ import { RouterLink } from 'vue-router'
 <template>
     <div
         id="header"
-        class="order-2 flex items-center justify-center transition-colors duration-500 ease-in-out"
+        class="order-2 flex select-none items-center justify-center transition-colors duration-500 ease-in-out"
     >
         <!-- column 1 -->
         <div id="hcol1" class="pr-4 text-right md:pr-14">
@@ -20,7 +20,8 @@ import { RouterLink } from 'vue-router'
         <!-- column 3 -->
         <div id="hcol3" class="pl-4 text-left md:pl-14">
             <router-link to="/music" id="music">music</router-link> <br />
-            <router-link to="/gallery" id="gallery">gallery</router-link>
+            <router-link to="/gallery" id="gallery">gallery</router-link> <br />
+            <router-link to="/the-box" id="the-box">the box</router-link>
         </div>
     </div>
 </template>

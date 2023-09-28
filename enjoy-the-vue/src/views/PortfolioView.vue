@@ -1,29 +1,29 @@
 <template>
-    <div class="about flex items-center justify-center">
+    <div class="flex items-center justify-center">
         <h1>this is the portfolio page</h1>
         <img src="https://media.tenor.com/fz22pIS20aQAAAAC/kick-feet.gif" />
     </div>
-    <div class="about flex items-center justify-center">
+    <div class="flex items-center justify-center">
         <h1>this is the portfolio page</h1>
         <img src="https://media.tenor.com/fz22pIS20aQAAAAC/kick-feet.gif" />
     </div>
-    <div class="about flex items-center justify-center">
+    <div class="flex items-center justify-center">
         <h1>this is the portfolio page</h1>
         <img src="https://media.tenor.com/fz22pIS20aQAAAAC/kick-feet.gif" />
     </div>
-    <div class="about flex items-center justify-center">
+    <div class="flex items-center justify-center">
         <h1>this is the portfolio page</h1>
         <img src="https://media.tenor.com/fz22pIS20aQAAAAC/kick-feet.gif" />
     </div>
-    <div class="about flex items-center justify-center">
+    <div class="flex items-center justify-center">
         <h1>this is the portfolio page</h1>
         <img src="https://media.tenor.com/fz22pIS20aQAAAAC/kick-feet.gif" />
     </div>
-    <div class="about flex items-center justify-center">
+    <div class="flex items-center justify-center">
         <h1>this is the portfolio page</h1>
         <img src="https://media.tenor.com/fz22pIS20aQAAAAC/kick-feet.gif" />
     </div>
-    <div class="about flex items-center justify-center">
+    <div class="flex items-center justify-center">
         <h1>this is the portfolio page</h1>
         <img src="https://media.tenor.com/fz22pIS20aQAAAAC/kick-feet.gif" />
     </div>
