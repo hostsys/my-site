@@ -308,6 +308,10 @@ for (let i = 0; i < header.length; i++) {
                     eyeMaterial.color.set('green')
                     break
 
+                case 'the-box':
+                    eyeMaterial.color.set('orange')
+                    break
+
                 default:
                     eyeMaterial.color.set('white')
             }
@@ -497,9 +501,7 @@ const navSfx = new Sfx(
     'http://codeskulptor-demos.commondatastorage.googleapis.com/GalaxyInvaders/alien_shoot.wav'
 )
 
-const sfxElements = Array.from(
-    document.querySelectorAll('a, #enterBtn, button, #progress-container')
-)
+const sfxElements = Array.from(document.querySelectorAll('a, #enterBtn, button'))
 
 for (let sfxElement of sfxElements) {
     if (sfxElement.id === 'enterBtn') {
@@ -694,6 +696,11 @@ function updateProgress() {
 
 function startDragging(e) {
     isDragging = true
+    navSfx.cloneAndPlay()
+
+    eventElements.forEach((e) => {
+        e.style.pointerEvents = 'none'
+    })
     currentSong = songs[currentSongIndex]
     currentSong.pause()
 
@@ -715,10 +722,18 @@ function updateDragging(e) {
     currentSong.musicFile.currentTime = (clickX / width) * duration
 }
 
+let animationAllowed = true
+
 function endDragging() {
     if (isDragging) {
         isDragging = false
+        eventElements.forEach((e) => {
+            e.style.pointerEvents = 'auto'
+        })
+        animationAllowed = false
+        setTimeout(() => (animationAllowed = true), 10)
         document.body.classList.remove('no-select')
+        navSfx.cloneAndPlay()
         playPauseSong()
     }
 }
@@ -859,12 +874,141 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // cursor change on click
 
-window.addEventListener('mousedown', () => {
-    document.querySelector('.cursor-default').style.cursor = 'url(/cursor/cursor-stab.png), default'
+let cursorIsAnimating = false
+const eventElements = document.querySelectorAll(
+    'a, button, router-link, input, #cover, .vol-btn, #progress-container'
+)
+const cursorElement = document.querySelector('.cursor-default')
+let downTime
+let upTime
+let deltaTime
+
+eventElements.forEach((e) => {
+    e.addEventListener('mousedown', () => {
+        if (!cursorIsAnimating) {
+            setTimeout(() => {
+                console.log(e.tagName)
+                cursorElement.style.cursor = 'url(/cursor/cursor-active-stab.png), default'
+            }, 1)
+        } else {
+            return
+        }
+    })
+    e.addEventListener('mouseenter', () => {
+        if (!cursorIsAnimating) {
+            setTimeout(() => {
+                eventElements.forEach((e) => {
+                    e.style.cursor = 'url(/cursor/cursor-active.png), default'
+                })
+            }, 1)
+        } else {
+            return
+        }
+    })
+    e.addEventListener('mouseup', () => {
+        if (!cursorIsAnimating) {
+            if (e.tagName === 'A') {
+                animationAllowed = false
+                spinCursor()
+                setTimeout(() => (animationAllowed = true), 10)
+            }
+        }
+    })
 })
+
+function animateCursor(delta) {
+    cursorIsAnimating = true
+
+    delta = Math.min(delta + 5, 200)
+    togglePointerEvents()
+    console.log('animate called')
+    setTimeout(() => {
+        cursorElement.style.cursor = 'url(/cursor/cursor-active.png), default'
+    }, delta * 1)
+    setTimeout(() => {
+        cursorElement.style.cursor = 'url(/cursor/cursor-stab.png), default'
+    }, delta * 2)
+    setTimeout(() => {
+        cursorElement.style.cursor = 'url(/cursor/cursor-active.png), default'
+    }, delta * 3)
+    setTimeout(() => {
+        cursorElement.style.cursor = 'url(/cursor/cursor-placeholder.png), default'
+        cursorIsAnimating = false
+        togglePointerEvents()
+    }, delta * 4)
+}
+
+function spinCursor() {
+    cursorIsAnimating = true
+    togglePointerEvents()
+    console.log('spin called')
+    const delta = 50
+    setTimeout(() => {
+        cursorElement.style.cursor = 'url(/cursor/spin-1.png), default'
+    }, 1)
+    setTimeout(() => {
+        cursorElement.style.cursor = 'url(/cursor/spin-2.png), default'
+    }, delta * 1)
+    setTimeout(() => {
+        cursorElement.style.cursor = 'url(/cursor/spin-3.png), default'
+    }, delta * 2)
+    setTimeout(() => {
+        cursorElement.style.cursor = 'url(/cursor/spin-4.png), default'
+    }, delta * 3)
+    setTimeout(() => {
+        cursorElement.style.cursor = 'url(/cursor/spin-5.png), default'
+    }, delta * 4)
+    setTimeout(() => {
+        cursorElement.style.cursor = 'url(/cursor/spin-6.png), default'
+    }, delta * 5)
+    setTimeout(() => {
+        cursorElement.style.cursor = 'url(/cursor/spin-7.png), default'
+    }, delta * 6)
+    setTimeout(() => {
+        cursorElement.style.cursor = 'url(/cursor/spin-8.png), default'
+    }, delta * 7)
+    setTimeout(() => {
+        cursorElement.style.cursor = 'url(/cursor/spin-9.png), default'
+    }, delta * 8)
+    setTimeout(() => {
+        cursorElement.style.cursor = 'url(/cursor/spin-10.png), default'
+    }, delta * 9)
+    setTimeout(() => {
+        cursorElement.style.cursor = 'url(/cursor/cursor-placeholder.png), default'
+        cursorIsAnimating = false
+        togglePointerEvents()
+    }, delta * 10)
+}
+
+function togglePointerEvents() {
+    eventElements.forEach((element) => {
+        if (!cursorIsAnimating) {
+            element.style.pointerEvents = 'auto'
+            console.log('set by js')
+        } else {
+            element.style.pointerEvents = 'none'
+            console.log('unset by js')
+        }
+    })
+}
+
+window.addEventListener('mousedown', () => {
+    downTime = new Date()
+    if (!cursorIsAnimating) {
+        cursorElement.style.cursor = 'url(/cursor/cursor-stab.png), default'
+    } else {
+        return
+    }
+})
+
 window.addEventListener('mouseup', () => {
-    document.querySelector('.cursor-default').style.cursor =
-        'url(/cursor/cursor-placeholder.png), default'
+    upTime = new Date()
+    if (!cursorIsAnimating && animationAllowed) {
+        deltaTime = upTime - downTime
+        animateCursor(deltaTime)
+    } else {
+        cursorElement.style.cursor = 'url(/cursor/cursor-placeholder.png), default'
+    }
 })
 
 // color picker in box

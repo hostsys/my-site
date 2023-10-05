@@ -9,6 +9,8 @@
         --color-tertiary: 99 99 99;
         --prev-color-primary: 99 99 99;
         --box-color: #ffffff;
+
+        --cursor-primary: url('/cursor/cursor-placeholder.png');
     }
 }
 
@@ -25,18 +27,21 @@
     src: url('/fonts/runescape_uf.ttf');
 }
 
-a,
+/* * {
+} */
+
+/* a,
 button,
 router-link,
 input {
     @apply cursor-active;
-}
-
+} */
+/* 
 a:active,
 button:active,
 router-link:active {
     @apply cursor-stabbing;
-}
+} */
 
 .no-select {
     user-select: none;
