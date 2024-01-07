@@ -871,35 +871,29 @@ document.addEventListener('DOMContentLoaded', function () {
     // start button
     const enterBtn = document.getElementById('enterBtn')
     // const enterBtnBox = document.getElementById('enterBtnBox')
-    const body = document.getElementById('contentBody')
+    // const body = document.getElementById('contentBody')
 
-    // enterBtn.addEventListener('click', () => {
-    //     body.style.opacity = '1'
-    //     // // enterBtn.style.opacity = 'none';
-    //     // enterBtnBox.style.opacity = '0'
-    //     // enterBtnBox.style.zIndex = '-3'
+    // // enterBtn.addEventListener('click', () => {
+    // //     body.style.opacity = '1'
+    // //     // // enterBtn.style.opacity = 'none';
+    // //     // enterBtnBox.style.opacity = '0'
+    // //     // enterBtnBox.style.zIndex = '-3'
 
-    //     enterBtnBox.remove()
-    //     showOrHideScroll()
-    //     playPauseSong
-    // })
+    // //     enterBtnBox.remove()
+    // //     showOrHideScroll()
+    // //     playPauseSong
+    // // })
 
     enterBtn.addEventListener('click', () => {
-        body.style.opacity = '1'
-        // // enterBtn.style.opacity = 'none';
-        // enterBtnBox.style.opacity = '0'
-        // enterBtnBox.style.zIndex = '-3'
-
-        // enterBtnBox.remove()
         showOrHideScroll()
         playPauseSong
     })
 
-    body.style.opacity = '0'
-    // enterBtn.style.opacity = 'none';
-    // enterBtnBox.style.opacity = '0'
-    // enterBtnBox.style.zIndex = '-3'
-    showOrHideScroll()
+    // body.style.opacity = '0'
+    // // enterBtn.style.opacity = 'none';
+    // // enterBtnBox.style.opacity = '0'
+    // // enterBtnBox.style.zIndex = '-3'
+    // showOrHideScroll()
 })
 
 // cursor change on click

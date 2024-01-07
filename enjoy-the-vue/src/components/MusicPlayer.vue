@@ -18,13 +18,13 @@ import { ForwardIcon } from '@heroicons/vue/24/outline'
             <img
                 id="cover-tooltip"
                 src="https://media.tenor.com/kxefu8OQcD8AAAAC/loli-anime.gif"
-                class="absolute left-[calc(50%-2px)] z-10 hidden h-full rounded-sm border-2 border-primary group-hover/tooltip:top-[-160%] group-hover/tooltip:block group-hover/tooltip:scale-[200%]"
+                class="absolute left-[calc(50%-2px)] z-10 hidden h-full rounded-sm border-[0.5px] border-primary group-hover/tooltip:top-[-160%] group-hover/tooltip:block group-hover/tooltip:scale-[200%]"
             />
         </div>
         <div id="music-container-inner" class="grid w-full grid-flow-col grid-cols-7 grid-rows-3">
             <div
                 id="volume-container"
-                class="no-select cursor-active active:cursor-stabbing col-span-1 row-span-1 flex w-full border-b-2 border-l-2 border-primary border-opacity-80 p-1 text-sm text-secondary transition-colors duration-300 group-hover/container:border-opacity-100"
+                class="no-select col-span-1 row-span-1 flex w-full cursor-active border-b-2 border-l-2 border-primary border-opacity-80 p-1 text-sm text-secondary transition-colors duration-300 active:cursor-stabbing group-hover/container:border-opacity-100"
             >
                 <button
                     id="0"
@@ -67,7 +67,7 @@ import { ForwardIcon } from '@heroicons/vue/24/outline'
             </div>
             <div
                 id="music-progress"
-                class="cursor-active active:cursor-stabbing col-span-6 row-span-1 flex"
+                class="col-span-6 row-span-1 flex cursor-active active:cursor-stabbing"
             >
                 <div
                     id="progress-container"

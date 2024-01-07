@@ -10,12 +10,17 @@ import NavMenu from './components/NavMenu.vue'
         <canvas id="bg"></canvas>
         <dialog
             class="absolute top-[50%] z-10 flex h-28 w-48 cursor-default flex-col justify-around border-2 border-primary bg-secondary bg-opacity-0 p-4 text-primary"
-            :class="{}"
             open
+            v-show="toggleShow"
         >
             <p>enter site?</p>
             <form class="flex justify-end" method="dialog">
-                <button type="submit" class="bg-primary bg-opacity-30 px-3" id="enterBtn">
+                <button
+                    @click="(toggleShow = !toggleShow), setOpaque('#contentBody')"
+                    type="submit"
+                    class="bg-primary bg-opacity-30 px-3"
+                    id="enterBtn"
+                >
                     ok
                 </button>
             </form>
@@ -54,3 +59,20 @@ import NavMenu from './components/NavMenu.vue'
         <MusicPlayer />
     </body>
 </template>
+
+<script>
+export default {
+    el: '#contentBody, #enterBtnBox, #enterBtn',
+    data() {
+        return {
+            toggleShow: true
+        }
+    },
+    methods: {
+        setOpaque(el) {
+            const target = document.querySelector(el)
+            target.style.opacity = 1
+        }
+    }
+}
+</script>
