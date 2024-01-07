@@ -33,10 +33,10 @@ module.exports = {
                 box: 'var(--box-color)'
             },
             cursor: {
-                default: 'var(--cursor-primary), default'
-                // active: 'url(/cursor/cursor-active.png), pointer',
-                // stab: 'url(/cursor/cursor-stab.png), pointer',
-                // stabbing: 'url(/cursor/cursor-active-stab.png), pointer'
+                default: 'var(--cursor-primary), default',
+                active: 'url(/cursor/cursor-active.png), pointer',
+                stab: 'url(/cursor/cursor-stab.png), pointer',
+                stabbing: 'url(/cursor/cursor-active-stab.png), pointer'
             }
         }
     },

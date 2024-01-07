@@ -44,9 +44,9 @@ const positions = []
 
 for (let i = 0; i < 6000; i++) {
     const particle = new THREE.Vector3(
-        Math.random() * 600 - 300,
+        Math.random() * 1100 - 550,
         Math.random() * 2000 - 1000,
-        Math.random() * 600 - 300
+        Math.random() * 1100 - 550
     )
 
     // particle.velocity = 0;
@@ -55,24 +55,29 @@ for (let i = 0; i < 6000; i++) {
     positions.push(particle.x, particle.y, particle.z)
 
     // bgGeometry.vertices.push(particles);
-    bgGeometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3))
 }
+
+bgGeometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3))
 
 // bgScene.background = new THREE.Color(0x010101)
 
 const bgTexture = new THREE.TextureLoader().load('star-texture.png')
 const bgMaterial = new THREE.PointsMaterial({
+    sizeAttenuation: true,
     color: 'white',
-    size: 2,
+    size: 5,
+    fog: true,
     map: bgTexture,
     transparent: true,
-    blending: THREE.AdditiveBlending
+    // alphaTest: 0.1,
+    blending: THREE.NormalBlending
 })
-console.log(bgMaterial)
+// console.log(bgMaterial)
 const stars = new THREE.Points(bgGeometry, bgMaterial)
+bgScene.fog = new THREE.Fog(0x000000, 500, 799)
 bgScene.add(stars)
 
-const bgCamera = new THREE.PerspectiveCamera(60, sizes.width / sizes.height, 0.01, 2000)
+const bgCamera = new THREE.PerspectiveCamera(60, sizes.width / sizes.height, 0.01, 800)
 bgCamera.position.z = 1
 bgCamera.rotation.x = Math.PI / 2
 
@@ -178,7 +183,8 @@ function bgAnimate() {
         y -= ySpeed
 
         if (y < -1000) {
-            y = 1000
+            // y = 1000
+            y = Math.random() * 100 + 950
         }
 
         positions[i + 1] = y // update the modified y-coordinate
@@ -206,7 +212,10 @@ const eyeScene = new THREE.Scene()
 // shape
 const eyeShape = new THREE.IcosahedronGeometry(2, 0, 0)
 const eyeMaterial = new THREE.MeshStandardMaterial({
-    color: 'white'
+    color: 'white',
+    transparent: true,
+    opacity: 1.0,
+    wireframe: false
 })
 const eyeMesh = new THREE.Mesh(eyeShape, eyeMaterial)
 
@@ -501,7 +510,7 @@ const navSfx = new Sfx(
     'http://codeskulptor-demos.commondatastorage.googleapis.com/GalaxyInvaders/alien_shoot.wav'
 )
 
-const sfxElements = Array.from(document.querySelectorAll('a, #enterBtn, button'))
+const sfxElements = Array.from(document.querySelectorAll('a, #enterBtn, button:not(.vol-btn)'))
 
 for (let sfxElement of sfxElements) {
     if (sfxElement.id === 'enterBtn') {
@@ -512,9 +521,11 @@ for (let sfxElement of sfxElements) {
     } else {
         if (
             sfxElement.parentElement.id === 'navigation' ||
-            sfxElement.id === 'progress-container'
+            sfxElement.id === 'progress-container' ||
+            sfxElement.parentElement.id === 'volume-container'
         ) {
             sfxElement.addEventListener('click', () => navSfx.cloneAndPlay())
+            sfxElement.addEventListener('mouseenter', () => enterSfx.cloneAndPlay())
         } else {
             sfxElement.addEventListener('mouseenter', () => enterSfx.cloneAndPlay())
             sfxElement.addEventListener('click', () => clickSfx.cloneAndPlay())
@@ -525,7 +536,7 @@ for (let sfxElement of sfxElements) {
 // music player
 
 class Song {
-    constructor(id, title, coverArt, musicFile, releaseDate, spotifyLink, oneLiner) {
+    constructor(id, title, coverArt, musicFile, releaseDate, spotifyLink, oneLiner, order) {
         this.id = id
         this.title = title
         this.coverArt = coverArt
@@ -533,6 +544,7 @@ class Song {
         this.releaseDate = releaseDate
         this.spotifyLink = spotifyLink
         this.oneLiner = oneLiner
+        this.order = order
         this.isPlaying = false
     }
 
@@ -556,7 +568,6 @@ class Song {
 }
 
 let songs = []
-const firstSongTitle = 'profession of abuse'
 
 const getMusic = async () => {
     try {
@@ -572,10 +583,11 @@ const getMusic = async () => {
                     songData.music_file,
                     songData.release_date,
                     songData.spotify_link,
-                    songData.one_liner
+                    songData.one_liner,
+                    songData.order
                 )
         )
-        const firstSongIndex = songs.findIndex((song) => song.title === firstSongTitle)
+        const firstSongIndex = songs.findIndex((song) => song.order === 1)
 
         if (firstSongIndex !== -1) {
             const [desiredSong] = songs.splice(firstSongIndex, 1)
@@ -605,6 +617,9 @@ const progressContainer = document.getElementById('progress-container')
 
 const playIcon = document.querySelector('.play-icon')
 const pauseIcon = document.querySelector('.pause-icon')
+
+const titleElement = document.getElementById('title')
+const coverElements = document.querySelectorAll('#cover, #cover-tooltip')
 
 playBtn.onclick = playPauseSong
 prevBtn.onclick = () => changeSong(-1)
@@ -656,13 +671,13 @@ volumeButtons.forEach((item) => {
     })
 })
 
-function interpolateColor(color2, color1, percentage) {
-    const [r1, g1, b1] = color1.split(' ').map(Number)
-    const [r2, g2, b2] = color2.split(' ').map(Number)
+function interpolateColor(primary, scene, percentage) {
+    const [r1, g1, b1] = primary.split(' ').map(Number)
+    const [r2, g2, b2] = scene.split(' ').map(Number)
 
-    const r = Math.round(r1 + (r2 - r1) * (percentage / 100))
-    const g = Math.round(g1 + (g2 - g1) * (percentage / 100))
-    const b = Math.round(b1 + (b2 - b1) * (percentage / 100))
+    const r = Math.round(r2 + r1 * (percentage / 100))
+    const g = Math.round(g2 + g1 * (percentage / 100))
+    const b = Math.round(b2 + b1 * (percentage / 100))
 
     return `rgb(${r} ${g} ${b})`
 }
@@ -671,13 +686,11 @@ function updateVolumeButtonColors() {
     const primaryColor = getComputedStyle(document.documentElement).getPropertyValue(
         '--color-primary'
     )
-    const secondaryColor = getComputedStyle(document.documentElement).getPropertyValue(
-        '--color-secondary'
-    )
+    const sceneColor = getComputedStyle(document.documentElement).getPropertyValue('--color-scene')
 
     document.querySelectorAll('.vol-btn').forEach((button, index) => {
-        const percentage = index * 17.5 + 30 // Adjust this for your desired steps
-        const backgroundColor = interpolateColor(primaryColor, secondaryColor, percentage)
+        const percentage = index * 17.5 + 30
+        const backgroundColor = interpolateColor(primaryColor, sceneColor, percentage)
         button.style.backgroundColor = backgroundColor
     })
 }
@@ -694,8 +707,13 @@ function updateProgress() {
     }
 }
 
+let downTime
+let upTime
+let deltaTime
+
 function startDragging(e) {
     isDragging = true
+    downTime = new Date()
     navSfx.cloneAndPlay()
 
     eventElements.forEach((e) => {
@@ -722,18 +740,19 @@ function updateDragging(e) {
     currentSong.musicFile.currentTime = (clickX / width) * duration
 }
 
-let animationAllowed = true
-
 function endDragging() {
     if (isDragging) {
         isDragging = false
+        upTime = new Date()
+        deltaTime = upTime - downTime
+        if (deltaTime > 200) {
+            navSfx.cloneAndPlay()
+            console.log('delta not long enough!')
+        }
         eventElements.forEach((e) => {
             e.style.pointerEvents = 'auto'
         })
-        animationAllowed = false
-        setTimeout(() => (animationAllowed = true), 10)
         document.body.classList.remove('no-select')
-        navSfx.cloneAndPlay()
         playPauseSong()
     }
 }
@@ -764,8 +783,6 @@ function loadSong() {
     currentSong.musicFile.currentTime = 0
     currentSong.musicFile.addEventListener('timeupdate', updateProgress)
     currentSong.musicFile.volume = currentVolume
-    const titleElement = document.getElementById('title')
-    const coverElements = document.querySelectorAll('#cover, #cover-tooltip')
 
     titleElement.innerHTML = currentSong.title
     coverElements.forEach((e) => {
@@ -853,74 +870,115 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // start button
     const enterBtn = document.getElementById('enterBtn')
-    const enterBtnBox = document.getElementById('enterBtnBox')
+    // const enterBtnBox = document.getElementById('enterBtnBox')
     const body = document.getElementById('contentBody')
 
     // enterBtn.addEventListener('click', () => {
     //     body.style.opacity = '1'
-    //     // enterBtn.style.opacity = 'none';
-    //     enterBtnBox.style.opacity = '0'
-    //     enterBtnBox.style.zIndex = '-3'
+    //     // // enterBtn.style.opacity = 'none';
+    //     // enterBtnBox.style.opacity = '0'
+    //     // enterBtnBox.style.zIndex = '-3'
+
+    //     enterBtnBox.remove()
     //     showOrHideScroll()
     //     playPauseSong
     // })
 
-    body.style.opacity = '1'
+    enterBtn.addEventListener('click', () => {
+        body.style.opacity = '1'
+        // // enterBtn.style.opacity = 'none';
+        // enterBtnBox.style.opacity = '0'
+        // enterBtnBox.style.zIndex = '-3'
+
+        // enterBtnBox.remove()
+        showOrHideScroll()
+        playPauseSong
+    })
+
+    body.style.opacity = '0'
     // enterBtn.style.opacity = 'none';
-    enterBtnBox.style.opacity = '0'
-    enterBtnBox.style.zIndex = '-3'
+    // enterBtnBox.style.opacity = '0'
+    // enterBtnBox.style.zIndex = '-3'
     showOrHideScroll()
 })
 
 // cursor change on click
 
-let cursorIsAnimating = false
+// let cursorIsAnimating = false
 const eventElements = document.querySelectorAll(
     'a, button, router-link, input, #cover, .vol-btn, #progress-container'
 )
 const cursorElement = document.querySelector('.cursor-default')
-let downTime
-let upTime
-let deltaTime
+// let downTime
+// let upTime
+// let deltaTime
 
 eventElements.forEach((e) => {
-    e.addEventListener('mousedown', () => {
-        if (!cursorIsAnimating) {
-            setTimeout(() => {
-                console.log(e.tagName)
-                cursorElement.style.cursor = 'url(/cursor/cursor-active-stab.png), default'
-            }, 1)
-        } else {
-            return
-        }
-    })
-    e.addEventListener('mouseenter', () => {
-        if (!cursorIsAnimating) {
-            setTimeout(() => {
-                eventElements.forEach((e) => {
-                    e.style.cursor = 'url(/cursor/cursor-active.png), default'
-                })
-            }, 1)
-        } else {
-            return
-        }
-    })
-    e.addEventListener('mouseup', () => {
-        if (!cursorIsAnimating) {
-            if (e.tagName === 'A') {
-                animationAllowed = false
-                spinCursor()
-                setTimeout(() => (animationAllowed = true), 10)
-            }
-        }
-    })
+    // e.style.cursor = 'url(/cursor/cursor-active.png), default'
+    // e.addEventListener('mousedown', () => {
+    //     if (!cursorIsAnimating) {
+    //         setTimeout(() => {
+    //             console.log(e.tagName)
+    //             cursorElement.style.cursor = 'url(/cursor/cursor-active-stab.png), default'
+    //         }, 1)
+    //     } else {
+    //         return
+    //     }
+    // })
+    // e.addEventListener('mouseenter', () => {
+    //     if (!cursorIsAnimating) {
+    //         setTimeout(() => {
+    //             eventElements.forEach((e) => {
+    //                 e.style.cursor = 'url(/cursor/cursor-active.png), default'
+    //             })
+    //         }, 1)
+    //     } else {
+    //         return
+    //     }
+    // })
+    // e.addEventListener('mouseup', () => {
+    //     if (!cursorIsAnimating) {
+    //         if (e.tagName === 'A') {
+    //             animationAllowed = false
+    //             spinCursor()
+    //             setTimeout(() => (animationAllowed = true), 10)
+    //         }
+    //     } else {
+    //         return
+    //     }
+    // })
 })
 
-function animateCursor(delta) {
+// function animateCursor(delta) {
+//     cursorIsAnimating = true
+
+//     delta = Math.min(delta + 5, 200)
+//     togglePointerEvents()
+//     console.log('animate called')
+//     setTimeout(() => {
+//         cursorElement.style.cursor = 'url(/cursor/cursor-active.png), default'
+//     }, delta * 1)
+//     setTimeout(() => {
+//         cursorElement.style.cursor = 'url(/cursor/cursor-stab.png), default'
+//     }, delta * 2)
+//     setTimeout(() => {
+//         cursorElement.style.cursor = 'url(/cursor/cursor-active.png), default'
+//     }, delta * 3)
+//     setTimeout(() => {
+//         cursorElement.style.cursor = 'url(/cursor/cursor-placeholder.png), default'
+//         cursorIsAnimating = false
+//         togglePointerEvents()
+//     }, delta * 4)
+// }
+
+function animateStab(step, delta) {
+    cursorIsAnimating = true
+}
+
+function animateCursor(step, delta) {
     cursorIsAnimating = true
 
     delta = Math.min(delta + 5, 200)
-    togglePointerEvents()
     console.log('animate called')
     setTimeout(() => {
         cursorElement.style.cursor = 'url(/cursor/cursor-active.png), default'
@@ -934,11 +992,72 @@ function animateCursor(delta) {
     setTimeout(() => {
         cursorElement.style.cursor = 'url(/cursor/cursor-placeholder.png), default'
         cursorIsAnimating = false
-        togglePointerEvents()
     }, delta * 4)
 }
 
-function spinCursor() {
+const elems = document.querySelectorAll('*')
+
+elems.forEach((e) => {
+    e.addEventListener('animationend', () => {
+        e.classList.remove('cursor-animating')
+    })
+})
+
+window.addEventListener('mouseup', (e) => {
+    if (
+        e.target.matches(
+            '*:not(button):not(#music-progress):not(#enterBtnBox):not(a):not(button svg):not(router-link):not(input):not(.vol-btn p)'
+        )
+    ) {
+        e.target.classList.add('cursor-animating')
+        console.log('clickAnim fired')
+    }
+})
+
+// function spinCursor() {
+//     cursorIsAnimating = true
+//     togglePointerEvents()
+//     console.log('spin called')
+//     const delta = 50
+//     setTimeout(() => {
+//         cursorElement.style.cursor = 'url(/cursor/spin-1.png), default'
+//     }, 1)
+//     setTimeout(() => {
+//         cursorElement.style.cursor = 'url(/cursor/spin-2.png), default'
+//     }, delta * 1)
+//     setTimeout(() => {
+//         cursorElement.style.cursor = 'url(/cursor/spin-3.png), default'
+//     }, delta * 2)
+//     setTimeout(() => {
+//         cursorElement.style.cursor = 'url(/cursor/spin-4.png), default'
+//     }, delta * 3)
+//     setTimeout(() => {
+//         cursorElement.style.cursor = 'url(/cursor/spin-5.png), default'
+//     }, delta * 4)
+//     setTimeout(() => {
+//         cursorElement.style.cursor = 'url(/cursor/spin-6.png), default'
+//     }, delta * 5)
+//     setTimeout(() => {
+//         cursorElement.style.cursor = 'url(/cursor/spin-7.png), default'
+//     }, delta * 6)
+//     setTimeout(() => {
+//         cursorElement.style.cursor = 'url(/cursor/spin-8.png), default'
+//     }, delta * 7)
+//     setTimeout(() => {
+//         cursorElement.style.cursor = 'url(/cursor/spin-9.png), default'
+//     }, delta * 8)
+//     setTimeout(() => {
+//         cursorElement.style.cursor = 'url(/cursor/spin-10.png), default'
+//     }, delta * 9)
+//     setTimeout(() => {
+//         cursorElement.style.cursor = 'url(/cursor/cursor-placeholder.png), default'
+//         cursorIsAnimating = false
+//         togglePointerEvents()
+//     }, delta * 10)
+// }
+
+let step = 0
+function spinCursor(step) {
     cursorIsAnimating = true
     togglePointerEvents()
     console.log('spin called')
@@ -980,36 +1099,39 @@ function spinCursor() {
     }, delta * 10)
 }
 
-function togglePointerEvents() {
-    eventElements.forEach((element) => {
-        if (!cursorIsAnimating) {
-            element.style.pointerEvents = 'auto'
-            console.log('set by js')
-        } else {
-            element.style.pointerEvents = 'none'
-            console.log('unset by js')
-        }
-    })
-}
+// function togglePointerEvents() {
+//     eventElements.forEach((element) => {
+//         if (!cursorIsAnimating) {
+//             element.style.pointerEvents = 'auto'
+//             console.log('set by js')
+//         } else {
+//             element.style.pointerEvents = 'none'
+//             console.log('unset by js')
+//         }
+//     })
+// }
 
-window.addEventListener('mousedown', () => {
-    downTime = new Date()
-    if (!cursorIsAnimating) {
-        cursorElement.style.cursor = 'url(/cursor/cursor-stab.png), default'
-    } else {
-        return
-    }
-})
+// window.addEventListener('mousedown', () => {
+//     downTime = new Date()
+// })
 
-window.addEventListener('mouseup', () => {
-    upTime = new Date()
-    if (!cursorIsAnimating && animationAllowed) {
-        deltaTime = upTime - downTime
-        animateCursor(deltaTime)
-    } else {
-        cursorElement.style.cursor = 'url(/cursor/cursor-placeholder.png), default'
-    }
-})
+// window.addEventListener('mouseup', () => {
+//     upTime = new Date()
+//     if (!cursorIsAnimating && animationAllowed) {
+//         deltaTime = upTime - downTime
+//         animateCursor(0, deltaTime)
+//     } else {
+//         cursorElement.style.cursor = 'url(/cursor/cursor-placeholder.png), default'
+//     }
+// })
+
+// window.addEventListener('mouseup', (e) => {
+//     // upTime = new Date()
+//     // deltaTime = upTime - downTime
+//     // animateCursor(0, deltaTime)
+
+//     clickAnim()
+// })
 
 // color picker in box
 // document.addEventListener('DOMContentLoaded', function () {

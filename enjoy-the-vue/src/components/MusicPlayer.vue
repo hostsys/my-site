@@ -7,7 +7,7 @@ import { ForwardIcon } from '@heroicons/vue/24/outline'
 <template>
     <div
         id="music-container"
-        class="group/container order-3 flex max-h-28 rounded-sm border-2 border-primary border-opacity-80 transition-colors duration-300 hover:border-opacity-100"
+        class="group/container order-3 flex max-h-28 rounded-sm border-2 border-primary border-opacity-80 duration-300 hover:border-opacity-100"
     >
         <div id="img-container" class="group/tooltip relative flex h-full w-28 flex-shrink-0 p-1">
             <img
@@ -26,19 +26,19 @@ import { ForwardIcon } from '@heroicons/vue/24/outline'
                 id="volume-container"
                 class="no-select cursor-active active:cursor-stabbing col-span-1 row-span-1 flex w-full border-b-2 border-l-2 border-primary border-opacity-80 p-1 text-sm text-secondary transition-colors duration-300 group-hover/container:border-opacity-100"
             >
-                <div
+                <button
                     id="0"
                     class="vol-btn transition-colors-manual flex w-1/5 items-center justify-center bg-primary"
                 >
                     <p>0%</p>
-                </div>
-                <div
+                </button>
+                <button
                     id="25"
                     class="vol-btn transition-colors-manual flex w-1/5 items-center justify-center bg-primary"
                 >
                     <p>25%</p>
-                </div>
-                <div
+                </button>
+                <button
                     id="50"
                     class="vol-btn transition-colors-manual flex w-1/5 items-center justify-center bg-primary"
                 >
@@ -47,28 +47,31 @@ import { ForwardIcon } from '@heroicons/vue/24/outline'
                     >
                         50%
                     </p>
-                </div>
-                <div
+                </button>
+                <button
                     id="75"
                     class="vol-btn transition-colors-manual flex w-1/5 items-center justify-center border-secondary bg-primary"
                 >
                     <p>75%</p>
-                </div>
-                <div
+                </button>
+                <button
                     id="100"
                     class="vol-btn transition-colors-manual flex w-1/5 items-center justify-center border-secondary bg-primary"
                 >
                     <p>100%</p>
-                </div>
+                </button>
             </div>
             <div id="music-info" class="col-span-1 row-span-2 flex flex-col justify-center pl-1">
-                <h4 id="title" class="text-left text-sm">loading...</h4>
+                <div id="title" class="">loading...</div>
                 <h4 id="spotify-link" class="text-sm underline">Spotify</h4>
             </div>
-            <div id="music-progress" class="col-span-6 row-span-1 flex">
+            <div
+                id="music-progress"
+                class="cursor-active active:cursor-stabbing col-span-6 row-span-1 flex"
+            >
                 <div
                     id="progress-container"
-                    class="cursor-active active:cursor-stabbing w-full border-b-2 border-l-2 border-primary border-opacity-80 p-1 transition-colors duration-300 group-hover/container:border-opacity-100"
+                    class="w-full border-b-2 border-l-2 border-primary border-opacity-80 p-1 duration-300 group-hover/container:border-opacity-100"
                 >
                     <div
                         id="progress"

@@ -12,6 +12,67 @@
 
         --cursor-primary: url('/cursor/cursor-placeholder.png');
     }
+    a,
+    button,
+    router-link,
+    input {
+        @apply cursor-active;
+    }
+    a:active,
+    button:active,
+    router-link:active,
+    input:active {
+        @apply cursor-stabbing;
+    }
+    /* *:active
+        :not(a:active, #cover, button:active, router-link:active, input:active, #music-progress) {
+        @apply cursor-stab;
+    } */
+    #contentBody {
+        @apply active:cursor-stab !important;
+    }
+}
+
+* .cursor-animating {
+    /* background-color: white; */
+    -webkit-animation: cursor 0.5s 1;
+    animation: cursor 0.5s 1;
+}
+
+@-webkit-keyframes cursor {
+    0% {
+        cursor: url(/cursor/cursor-stab.png), auto;
+    }
+    25% {
+        cursor: url(/cursor/cursor-active.png), auto;
+    }
+    50% {
+        cursor: url(/cursor/cursor-stab.png), auto;
+    }
+    75% {
+        cursor: url(/cursor/cursor-active.png), auto;
+    }
+    100% {
+        cursor: url(/cursor/cursor-placeholder.png), auto;
+    }
+}
+
+@keyframes cursor {
+    0% {
+        cursor: url(/cursor/cursor-active-stab.png), auto;
+    }
+    25% {
+        cursor: url(/cursor/cursor-active.png), auto;
+    }
+    50% {
+        cursor: url(/cursor/cursor-stab.png), auto;
+    }
+    75% {
+        cursor: url(/cursor/cursor-active.png), auto;
+    }
+    100% {
+        cursor: url(/cursor/cursor-placeholder.png), auto;
+    }
 }
 
 @font-face {
@@ -36,11 +97,39 @@ router-link,
 input {
     @apply cursor-active;
 } */
-/* 
-a:active,
+
+/* *:active
+    :not(a, button, router-link, input, #cover, .vol-btn, #progress-container)
+    :not(
+        a:active,
+        button:active,
+        router-link:active,
+        input:active,
+        #cover:active,
+        .vol-btn:active,
+        #progress-container:active
+    ) {
+    @apply cursor-stab;
+} */
+
+/* a:active,
 button:active,
-router-link:active {
-    @apply cursor-stabbing;
+router-link:active,
+input:active,
+#cover:active,
+.vol-btn:active,
+#progress-container:active {
+    @apply cursor-stabbing !important;
+}
+
+a,
+button,
+router-link,
+input,
+#cover,
+.vol-btn,
+#progress-container {
+    @apply cursor-active;
 } */
 
 .no-select {
@@ -68,7 +157,8 @@ router-link:active {
 }
 
 .router-link-active {
-    @apply underline opacity-60;
+    /* @apply underline opacity-60; */
+    @apply bg-primary bg-opacity-30;
 }
 
 #bg {
