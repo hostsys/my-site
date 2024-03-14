@@ -18,8 +18,16 @@
                 </p>
             </div>
         </div>
-        <input id="color-picker" type="color" v-model="colorPickerValue" class="absolute hidden" />
+        <input
+            @input="onInputChange()"
+            @change="colorPickerClose()"
+            id="color-picker"
+            type="color"
+            v-model="colorPickerValue"
+            class="absolute hidden"
+        />
         <p class="text-center">
+            hello, {{ ipAddress }} of {{ locationData }}. <br />
             you may change the color of the box, as may anyone else. <br />
             if they change it, you will know, as will they if you do. <br />
             you may only change the color of the box once, and any color chosen will never be
@@ -32,8 +40,17 @@
 export default {
     data() {
         return {
-            colorPickerValue: '#ffffff'
+            colorPickerValue: '#ffffff',
+            colorHex: null,
+            colorRGB: null,
+            ipAddress: null,
+            locationData: null,
+            token: null
         }
+    },
+    mounted() {
+        this.fetchIPAddress()
+        this.generateToken()
     },
     methods: {
         toggleColor() {
@@ -55,21 +72,80 @@ export default {
             //     console.log(boxColor + 'is current box color')
             // }
         },
-        convertHex(color) {
+        convertHexToRGB(color) {
             color = color.replace('#', '')
             let r = parseInt(color.substring(0, 2), 16)
             let g = parseInt(color.substring(2, 4), 16)
             let b = parseInt(color.substring(4, 6), 16)
-            return `rgb( ${r}, ${g}, ${b} )`
+            this.colorRGB = `rgb( ${r}, ${g}, ${b} )`
+            return this.colorRGB
         },
         displayHex() {
             document.getElementById('color-label').innerHTML = this.colorPickerValue
-            console.log('entered')
         },
         displayRGB() {
-            document.getElementById('color-label').innerHTML = this.convertHex(
+            document.getElementById('color-label').innerHTML = this.convertHexToRGB(
                 this.colorPickerValue
             )
+        },
+        onInputChange() {
+            // console.log(this.colorPickerValue)
+        },
+        colorPickerClose() {
+            this.colorHex = this.colorPickerValue
+            console.log(
+                'color hex: ' +
+                    this.colorHex +
+                    ' color rgb: ' +
+                    this.convertHexToRGB(this.colorPickerValue)
+            )
+        },
+        fetchIPAddress() {
+            fetch('https://api.ipify.org?format=json')
+                .then((response) => response.json())
+                .then((data) => {
+                    this.ipAddress = data.ip
+                    this.fetchLocationData(data.ip)
+                })
+                .catch((error) => {
+                    console.error('ip fetch error:', error)
+                })
+        },
+        fetchLocationData(ip) {
+            fetch(`http://ip-api.com/json/${ip}`)
+                .then((response) => response.json())
+                .then((data) => {
+                    this.locationData = data.city.toLowerCase()
+                })
+                .catch((error) => {
+                    console.error('location fetch error:', error)
+                })
+        },
+        generateToken() {
+            const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+            let token = ''
+            const n = 12 // nice
+            for (var i = 0; i < n; i++) {
+                token += chars[Math.floor(Math.random() * chars.length)]
+            }
+            this.token = token
+
+            if (localStorage.getItem('token') == null) {
+                console.log('no token found in local storage, adding token...')
+                localStorage.setItem('token', token)
+                printToken()
+            } else {
+                printToken()
+            }
+
+            function printToken() {
+                setTimeout(() => {
+                    console.log('token found: ' + localStorage.getItem('token'))
+                    console.log(
+                        'your token is one of ' + Math.pow(chars.length, n).toLocaleString()
+                    )
+                }, 2000)
+            }
         }
     }
 }

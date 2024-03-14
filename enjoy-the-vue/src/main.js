@@ -594,7 +594,7 @@ const getMusic = async () => {
             songs.unshift(desiredSong)
         }
 
-        console.log(songs)
+        // console.log(songs)
         loadSong()
     } catch (err) {
         console.log(err)
@@ -853,10 +853,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 percent.innerHTML = 'scroll'
                 break
             case 99:
-                percent.innerHTML = 'no more'
+                percent.innerHTML = 'end'
                 break
             case 100:
-                percent.innerHTML = 'no more'
+                percent.innerHTML = 'end'
                 break
             default:
                 setTimeout(() => {
@@ -1004,7 +1004,7 @@ window.addEventListener('mouseup', (e) => {
         )
     ) {
         e.target.classList.add('cursor-animating')
-        console.log('clickAnim fired')
+        // console.log('clickAnim fired')
     }
 })
 

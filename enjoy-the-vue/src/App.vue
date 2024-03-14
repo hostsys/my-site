@@ -9,7 +9,7 @@ import NavMenu from './components/NavMenu.vue'
     <header class="text-primary">
         <canvas id="bg"></canvas>
         <dialog
-            class="absolute top-[50%] z-10 flex h-28 w-48 cursor-default flex-col justify-around border-2 border-primary bg-secondary bg-opacity-0 p-4 text-primary"
+            class="fixed top-[50%] z-10 flex translate-y-[-50%] cursor-default flex-col rounded-sm border-2 border-primary bg-secondary bg-opacity-0 p-5 text-primary"
             open
             v-show="toggleShow"
         >
@@ -18,7 +18,7 @@ import NavMenu from './components/NavMenu.vue'
                 <button
                     @click="(toggleShow = !toggleShow), setOpaque('#contentBody')"
                     type="submit"
-                    class="bg-primary bg-opacity-30 px-3"
+                    class="mt-3 bg-primary bg-opacity-30 px-3"
                     id="enterBtn"
                 >
                     ok
@@ -45,11 +45,17 @@ import NavMenu from './components/NavMenu.vue'
         <!-- begin content -->
         <div
             id="content"
-            class="order-1 flex-grow overflow-y-auto rounded-sm border-2 border-solid border-primary border-opacity-80 p-5 shadow-primary transition-all duration-300 hover:border-opacity-100 lg:p-5"
+            class="group order-1 flex-grow overflow-y-auto rounded-sm border-2 border-solid border-primary border-opacity-80 p-5 shadow-primary transition-all duration-300 hover:border-opacity-100 lg:p-5"
         >
             <div
+                id="page-header"
+                class="fixed left-8 top-2 rounded-sm border-2 border-primary border-opacity-80 bg-scene px-2 transition-all duration-300 group-hover:border-opacity-100 md:left-10"
+            >
+                {{ $route.name }}
+            </div>
+            <div
                 id="percent"
-                class="rounded-xs fixed left-8 top-8 z-10 w-24 bg-primary py-1 text-center text-scene transition-all duration-300 md:left-10 md:top-10"
+                class="rounded-xs fixed right-8 top-8 z-10 w-20 bg-primary py-0 text-center text-scene transition-all duration-300 md:right-10 md:top-10"
             >
                 scroll
             </div>
